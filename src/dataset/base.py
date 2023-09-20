@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 from typing import List
+import os
+import json
+import dataclasses
+
 
 @dataclass_json
 @dataclass
@@ -25,3 +29,9 @@ class Dataset:
         self.id = id
         self.name = name
         self.samples = samples
+
+    def save(self):
+        directory = "../data/datasets"
+        os.makedirs(directory, exist_ok=True)
+        with open(os.path.join(directory, "{}.json".format(self.name)), "w") as f:
+            json.dump(dataclasses.asdict(self), f, indent=4)

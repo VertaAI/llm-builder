@@ -47,8 +47,7 @@ if save_button:
     dataset = [d for d in datasets if d.name == dataset_selection][0]
     prompt_id = len(prompts)
     prompt = Prompt(prompt_id, prompt_name, promp_content)
-    with open("../data/prompts/{}.json".format(prompt.name), "w") as f:
-        json.dump(dataclasses.asdict(prompt), f, indent=4)
+    prompt.save()
     run_computations(model, prompt, dataset)
     (datasets, prompts) = load_data()
     # TODO: clear table and rest of playground

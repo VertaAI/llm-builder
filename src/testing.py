@@ -49,10 +49,8 @@ def generate_data():
 
     # Save the datasets to yaml files
     for dataset in datasets:
-        with open("../data/datasets/{}.json".format(dataset.name), "w") as f:
-            json.dump(dataclasses.asdict(dataset), f, indent=4)
+        dataset.save()
 
     # Save the prompts to yaml files
     for prompt in prompts:
-        with open("../data/prompts/{}.json".format(prompt.name), "w") as f:
-            json.dump(dataclasses.asdict(prompt), f, indent=4)
+        prompt.save()
