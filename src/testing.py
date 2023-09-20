@@ -29,23 +29,25 @@ def generate_string(min_words=5, max_words=10):
 def generate_data():
     datasets: List[Dataset] = [
         Dataset(i, generate_string(1,1), [
-            Sample(j, generate_string(1,3), generate_string(1,3))
+            Sample(j, generate_string(1,10), generate_string(1,10))
             for j in range(5)
         ])
-        for i in range(2)
+        for i in range(1)
     ]
 
     prompts: List[Prompt] = [
-        Prompt(i, generate_string(1,1), generate_string(1,3))
-        for i in range(2)
+        Prompt(i, generate_string(1,1), generate_string(1,10))
+        for i in range(1)
     ]
 
     # Clear the datasets folder
-    for filename in os.listdir("../data/datasets"):
-        os.remove("../data/datasets/{}".format(filename))
+    if os.path.exists("../data/datasets"):
+        for filename in os.listdir("../data/datasets"):
+            os.remove("../data/datasets/{}".format(filename))
     # Clear the prompts folder
-    for filename in os.listdir("../data/prompts"):
-        os.remove("../data/prompts/{}".format(filename))
+    if os.path.exists("../data/prompts"):
+        for filename in os.listdir("../data/prompts"):
+            os.remove("../data/prompts/{}".format(filename))
 
     # Save the datasets to yaml files
     for dataset in datasets:

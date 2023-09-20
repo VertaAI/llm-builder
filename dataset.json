@@ -1,0 +1,14 @@
+{
+    "samples": [
+        {
+            "id": 0,
+            "input_data": "my data",
+            "output_data": "is awesome"
+        },
+        {
+            "id": 1,
+            "input_data": "my other data",
+            "output_data": "is kind of ok"
+        }
+    ]
+}
