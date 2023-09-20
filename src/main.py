@@ -11,6 +11,7 @@ import json
 import itertools
 from testing import generate_data
 from table import load_data
+from computation import run_all_computations, load_or_compute
 
 models: List[Model] = [
     Nop(0),
@@ -19,9 +20,7 @@ models: List[Model] = [
 # generate_data()
 (datasets, prompts) = load_data()
 
-# Create cache folder
-if not os.path.exists("../cache"):
-    os.makedirs("../cache")
+# run_all_computations(models, prompts, datasets)
 
 data = {
     'model': [],
@@ -36,6 +35,7 @@ data = {
 
 for dataset in datasets:
     for (model, prompt, sample) in itertools.product(models, prompts, dataset.samples):
+        prediction = load_or_compute(model, prompt, dataset, sample)
         data['model'].append(model.get_name())
         data['prompt name'].append(prompt.name)
         data['prompt content'].append(prompt.prompt)
@@ -43,7 +43,7 @@ for dataset in datasets:
         data['sample id'].append(sample.id)
         data['sample input'].append(sample.input_data)
         data['sample output'].append(sample.output_data)
-        data['prediction'].append(model.predict(prompt, sample.input_data))
+        data['prediction'].append(prediction)
 
 
 # Create a DataFrame from the sample data
