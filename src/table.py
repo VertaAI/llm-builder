@@ -2,6 +2,9 @@ from prompts.base import Prompt
 import os
 from dataset.base import Dataset
 import json
+import itertools
+from computation import load_or_compute
+import pandas as pd
 
 def load_data():
     # Load datasets from yaml files
@@ -29,3 +32,34 @@ def load_data():
             prompts.append(prompt)
 
     return (datasets, prompts)
+
+def create_table(datasets, models, prompts, cached=True):
+    data = {
+        'model': [],
+        'prompt name': [],
+        'prompt content': [],
+        'dataset': [],
+        'sample id': [],
+        'sample input': [],
+        'sample output': [],
+        'prediction': [],
+    }
+
+    for dataset in datasets:
+        for (model, prompt, sample) in itertools.product(models, prompts, dataset.samples):
+            if cached:
+                prediction = load_or_compute(model, prompt, dataset, sample)
+            else:
+                prediction = model.predict(prompt, sample.input_data)
+            data['model'].append(model.get_name())
+            data['prompt name'].append(prompt.name)
+            data['prompt content'].append(prompt.prompt)
+            data['dataset'].append(dataset.name)
+            data['sample id'].append(sample.id)
+            data['sample input'].append(sample.input_data)
+            data['sample output'].append(sample.output_data)
+            data['prediction'].append(prediction)
+
+    df = pd.DataFrame(data)
+
+    return df

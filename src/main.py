@@ -10,8 +10,8 @@ import dataclasses
 import json
 import itertools
 from testing import generate_data
-from table import load_data
-from computation import run_all_computations, load_or_compute
+from table import load_data, create_table
+from computation import run_all_computations, load_or_compute, run_computations
 
 models: List[Model] = [
     Nop(0),
@@ -20,38 +20,39 @@ models: List[Model] = [
 # generate_data()
 (datasets, prompts) = load_data()
 
-# run_all_computations(models, prompts, datasets)
-
-data = {
-    'model': [],
-    'prompt name': [],
-    'prompt content': [],
-    'dataset': [],
-    'sample id': [],
-    'sample input': [],
-    'sample output': [],
-    'prediction': [],
-}
-
-for dataset in datasets:
-    for (model, prompt, sample) in itertools.product(models, prompts, dataset.samples):
-        prediction = load_or_compute(model, prompt, dataset, sample)
-        data['model'].append(model.get_name())
-        data['prompt name'].append(prompt.name)
-        data['prompt content'].append(prompt.prompt)
-        data['dataset'].append(dataset.name)
-        data['sample id'].append(sample.id)
-        data['sample input'].append(sample.input_data)
-        data['sample output'].append(sample.output_data)
-        data['prediction'].append(prediction)
-
-
 # Create a DataFrame from the sample data
-df = pd.DataFrame(data)
+st.title('LLM builder')
 
-# Create a Streamlit app
-st.title('Streamlit Table Example')
-st.write('This is a simple table created using Streamlit.')
+st.subheader('Prompt playground')
 
-# Display the table using st.table()
-st.table(df)
+model_options = [model.get_name() for model in models]
+model_selection = st.selectbox('Select a model:', model_options)
+
+dataset_options = [dataset.name for dataset in datasets]
+dataset_selection = st.selectbox('Select a dataset:', dataset_options)
+
+prompt_name = st.text_input("Enter a prompt name:")
+promp_content = st.text_area("Enter a testing prompt:", height=200)
+
+try_button = st.button("Try prompt")
+save_button = st.button("Save prompt")
+
+if try_button:
+    model = [m for m in models if m.get_name() == model_selection][0]
+    dataset = [d for d in datasets if d.name == dataset_selection][0]
+    st.table(create_table([dataset], [model], [Prompt('', prompt_name, promp_content)], cached=False))
+
+if save_button:
+    model = [m for m in models if m.get_name() == model_selection][0]
+    dataset = [d for d in datasets if d.name == dataset_selection][0]
+    prompt_id = len(prompts)
+    prompt = Prompt(prompt_id, prompt_name, promp_content)
+    with open("../data/prompts/{}.json".format(prompt.name), "w") as f:
+        json.dump(dataclasses.asdict(prompt), f, indent=4)
+    run_computations(model, prompt, dataset)
+    (datasets, prompts) = load_data()
+    # TODO: clear table and rest of playground
+
+st.subheader('Data collected so far')
+
+st.table(create_table(datasets, models, prompts, cached=True))
