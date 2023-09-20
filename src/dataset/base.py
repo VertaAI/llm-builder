@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 from typing import List
 
+@dataclass_json
 @dataclass
 class Sample:
     id: int
@@ -12,6 +14,7 @@ class Sample:
         self.input_data = input_data
         self.output_data = output_data
 
+@dataclass_json
 @dataclass
 class Dataset:
     id: int
