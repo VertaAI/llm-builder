@@ -78,17 +78,26 @@ def load_data():
 
 data = {
     'model': [],
+    'prompt name': [],
+    'prompt content': [],
     'dataset': [],
-    'sample': [],
-    'prompt': [],
+    'sample id': [],
+    'sample input': [],
+    'sample output': [],
+    'prediction': [],
 }
 
 for dataset in datasets:
-    for (sample, model, prompt) in itertools.product(dataset.samples, models, prompts):
+    for (model, prompt, sample) in itertools.product(models, prompts, dataset.samples):
         data['model'].append(model.get_name())
+        data['prompt name'].append(prompt.name)
+        data['prompt content'].append(prompt.prompt)
         data['dataset'].append(dataset.name)
-        data['sample'].append(sample.id)
-        data['prompt'].append(prompt.name)
+        data['sample id'].append(sample.id)
+        data['sample input'].append(sample.input_data)
+        data['sample output'].append(sample.output_data)
+        data['prediction'].append(model.predict(prompt, sample.input_data))
+
 
 # Create a DataFrame from the sample data
 df = pd.DataFrame(data)

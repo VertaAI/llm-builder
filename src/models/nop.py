@@ -9,4 +9,4 @@ class Nop(Model):
         return self._id
 
     def predict(self, prompt: str, input_data:str) -> str:
-        return generate_string()
+        return generate_string(1,5)
