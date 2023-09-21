@@ -20,6 +20,8 @@ models: List[Model] = [
 # generate_data()
 (datasets, prompts) = load_data()
 
+st.set_page_config(layout="wide")
+
 # Create a DataFrame from the sample data
 st.title('LLM builder')
 
@@ -80,12 +82,18 @@ edited_df = st.data_editor(
     hide_index=True,
     column_config={"Select": st.column_config.CheckboxColumn(required=True)},
     disabled=df.columns,
+    width=10000,
 )
 # TODO: can we set the width of the table to be bigger?
 selected_rows = edited_df[edited_df.Select]
 selection = selected_rows.drop('Select', axis=1)
 st.write("Selected rows:")
-st.write(selection)
+st.data_editor(
+    selection,
+    hide_index=True,
+    disabled=df.columns,
+    width=10000,
+)
 # TODO: hide index on the table above
 
 @st.cache_data
