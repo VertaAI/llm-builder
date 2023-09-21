@@ -41,14 +41,17 @@ if uploaded_dataset is not None:
     dataset_dict = json.loads(bytes_data)
     st.json(dataset_dict)
 
-    dataset_name = st.text_input("Enter a dataset name:")  # TODO: make required
+    dataset_name = st.text_input("Enter a dataset name:")
     if st.button("Import"):
-        dataset_id = len(datasets)
-        dataset_dict['id'] = dataset_id
-        dataset_dict['name'] = dataset_name
-        dataset = Dataset.from_dict(dataset_dict)
-        dataset.save()
-        (datasets, prompts) = load_data()
+        if dataset_name == '':
+            st.error('Dataset name cannot be empty')
+        else:
+            dataset_id = len(datasets)
+            dataset_dict['id'] = dataset_id
+            dataset_dict['name'] = dataset_name
+            dataset = Dataset.from_dict(dataset_dict)
+            dataset.save()
+            (datasets, prompts) = load_data()
 
 st.subheader('Prompt playground')
 with st.form("playground", clear_on_submit=False):
