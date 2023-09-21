@@ -1,13 +1,15 @@
 import itertools
 import os
 
+
 def run_computations(model, prompt, dataset):
     # Create cache folder
     if not os.path.exists("../cache"):
         os.makedirs("../cache")
 
     for sample in dataset.samples:
-        unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, sample.id)
+        unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id,
+                                                                         sample.id)
 
         result = model.predict(prompt, sample.input_data)
         # Save result to the given file
@@ -16,9 +18,11 @@ def run_computations(model, prompt, dataset):
         with open(filepath, "w") as f:
             f.write(result)
 
+
 def run_all_computations(models, prompts, datasets):
     for (model, prompt, dataset) in itertools.product(models, prompts, datasets):
         run_computations(model, prompt, dataset)
+
 
 def load_or_compute(model, prompt, dataset, sample):
     unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, sample.id)

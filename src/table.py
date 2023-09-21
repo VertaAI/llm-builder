@@ -6,6 +6,7 @@ import itertools
 from computation import load_or_compute
 import pandas as pd
 
+
 def load_data():
     # Load datasets from yaml files
     datasets = []
@@ -34,6 +35,7 @@ def load_data():
                 prompts.append(prompt)
 
     return (datasets, prompts)
+
 
 def create_table(datasets, models, prompts, cached=True):
     data = {

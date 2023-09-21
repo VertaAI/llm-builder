@@ -1,11 +1,9 @@
+import os
 import random
 from typing import List
-from prompts.base import Prompt
-import os
+
 from dataset.base import Dataset, Sample
-import pandas as pd
-import dataclasses
-import json
+from prompts.base import Prompt
 
 # List of sample words
 sample_words = [
@@ -19,6 +17,7 @@ sample_words = [
     "deserunt", "mollit", "anim", "id", "est", "laborum"
 ]
 
+
 # Function to generate a random "Lorem Ipsum"-like sentence
 def generate_string(min_words=5, max_words=10):
     num_words = random.randint(min_words, max_words)
@@ -28,15 +27,15 @@ def generate_string(min_words=5, max_words=10):
 
 def generate_data():
     datasets: List[Dataset] = [
-        Dataset(i, generate_string(1,1), [
-            Sample(j, generate_string(1,10), generate_string(1,10))
+        Dataset(i, generate_string(1, 1), [
+            Sample(j, generate_string(1, 10), generate_string(1, 10))
             for j in range(5)
         ])
         for i in range(1)
     ]
 
     prompts: List[Prompt] = [
-        Prompt(i, generate_string(1,1), generate_string(1,10))
+        Prompt(i, generate_string(1, 1), generate_string(1, 10))
         for i in range(1)
     ]
 
