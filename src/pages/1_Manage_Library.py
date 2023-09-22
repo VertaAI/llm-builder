@@ -2,15 +2,13 @@ import pandas as pd
 import streamlit as st
 
 import table
-from st_aggrid import AgGrid, ColumnsAutoSizeMode, ExcelExportMode, GridOptionsBuilder
+from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder
 import LLM_Builder
 
 models = LLM_Builder.load_models()
 
 (datasets, prompts) = table.load_data()
 df = table.create_table(datasets, models, prompts, cached=True)
-df_with_selections = df.copy()
-df_with_selections.insert(0, "Select", False)
 
 gb = GridOptionsBuilder.from_dataframe(df)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=True)
