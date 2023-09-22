@@ -16,6 +16,7 @@ gb = GridOptionsBuilder.from_dataframe(df)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=True)
 gb.configure_column("sample id", hide=True)
 gb.configure_selection(selection_mode="multiple", use_checkbox=True)
+
 library_grid = AgGrid(df, height=500, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
                       gridOptions=gb.build(), key='grid')
 
