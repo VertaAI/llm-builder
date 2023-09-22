@@ -8,6 +8,8 @@ from dataset.base import Sample
 import pandas as pd
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 
+st.set_page_config(layout="wide")
+
 (datasets, prompts) = table.load_data()
 
 st.subheader('Dataset Management')
@@ -29,11 +31,12 @@ st.subheader('Dataset samples')
 gb = GridOptionsBuilder.from_dataframe(samples_frame)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, autoHeight=True)
 gb.configure_selection(selection_mode="single", use_checkbox=False)
+gb.configure_column("id", hide=True)
 samples_grid = AgGrid(
     samples_frame,
     data_return_mode=DataReturnMode.AS_INPUT,
     update_mode=GridUpdateMode.SELECTION_CHANGED,
-    columns_auto_size_mode=ColumnsAutoSizeMode.NO_AUTOSIZE,
+    columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
     gridOptions=gb.build())
 
 selected = samples_grid["selected_rows"]

@@ -5,6 +5,8 @@ import table
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder
 import LLM_Builder
 
+st.set_page_config(layout="wide")
+
 models = LLM_Builder.load_models()
 
 (datasets, prompts) = table.load_data()
@@ -12,8 +14,10 @@ df = table.create_table(datasets, models, prompts, cached=True)
 
 gb = GridOptionsBuilder.from_dataframe(df)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=True)
+gb.configure_column("sample id", hide=True)
 gb.configure_selection(selection_mode="multiple", use_checkbox=True)
-library_grid = AgGrid(df, height=500, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW, gridOptions=gb.build(), key='grid')
+library_grid = AgGrid(df, height=500, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
+                      gridOptions=gb.build(), key='grid')
 
 selected_rows = library_grid["selected_rows"]
 selection = pd.DataFrame(selected_rows)

@@ -7,6 +7,8 @@ import LLM_Builder
 
 _FORM_VALIDATION_KEY = 'dc_form_validation'
 
+st.set_page_config(layout="wide")
+
 models = LLM_Builder.load_models()
 (datasets, prompts) = load_data()
 
