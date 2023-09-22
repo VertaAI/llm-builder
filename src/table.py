@@ -40,7 +40,6 @@ def load_data():
 def create_table(datasets, models, prompts, cached=True):
     data = {
         'model': [],
-        'prompt name': [],
         'prompt content': [],
         'dataset': [],
         'sample id': [],
@@ -56,7 +55,6 @@ def create_table(datasets, models, prompts, cached=True):
             else:
                 prediction = model.predict(prompt, sample.input_data)
             data['model'].append(model.get_name())
-            data['prompt name'].append(prompt.name)
             data['prompt content'].append(prompt.prompt)
             data['dataset'].append(dataset.name)
             data['sample id'].append(sample.id)

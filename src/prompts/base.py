@@ -8,16 +8,14 @@ import os
 @dataclass
 class Prompt:
     id: int
-    name: str
     prompt: str
 
-    def __init__(self, id: int, name: str, prompt: str):
+    def __init__(self, id: int, prompt: str):
         self.id = id
-        self.name = name
         self.prompt = prompt
 
     def save(self):
         directory = "../data/prompts"
         os.makedirs(directory, exist_ok=True)
-        with open(os.path.join(directory, "{}.json".format(self.name)), "w") as f:
+        with open(os.path.join(directory, "{}.json".format(self.id)), "w") as f:
             json.dump(dataclasses.asdict(self), f, indent=4)
