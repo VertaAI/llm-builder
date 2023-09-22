@@ -21,26 +21,56 @@ with st.form('create_ds', clear_on_submit=True):
         st.experimental_rerun()
 
 
-st.subheader('Dataset samples')
 selected_dataset = filter(lambda d: d.name == selected_dataset_name, datasets).__next__()
 
-samples_frame = pd.DataFrame(selected_dataset.samples, columns=['input_data', 'output_data'])
-samples_grid = AgGrid(samples_frame, height=300, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW)
+samples_frame = pd.DataFrame(selected_dataset.samples, columns=['id', 'input_data', 'output_data'])
+st.subheader('Dataset samples')
 
+gb = GridOptionsBuilder.from_dataframe(samples_frame)
+gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, autoHeight=True)
+gb.configure_selection(selection_mode="single", use_checkbox=False)
+samples_grid = AgGrid(
+    samples_frame,
+    data_return_mode=DataReturnMode.AS_INPUT,
+    update_mode=GridUpdateMode.SELECTION_CHANGED,
+    columns_auto_size_mode=ColumnsAutoSizeMode.NO_AUTOSIZE,
+    gridOptions=gb.build())
 
-st.subheader('Add a sample')
+selected = samples_grid["selected_rows"]
+
+sample = None
+if len(selected) == 1:
+    st.subheader('Update sample')
+    sample = [s for s in selected_dataset.samples if s.id == selected[0]['id']][0]
+    ds_input = sample.input_data
+    ds_output = sample.output_data
+    sample_id = sample.id
+else:
+    st.subheader('Create new sample')
+    ds_input = ''
+    ds_output = ''
+    sample_id = len(selected_dataset.samples)
+
 with st.form("add a sample", clear_on_submit=True):
-    dataset_input = st.text_area("Document to summarize:", height=300)
-    dataset_output = st.text_area("Expected summary (optional):", height=200)
-    prompt = "Create"
+    dataset_input = st.text_area("Document to summarize:", height=300, value=ds_input)
+    dataset_output = st.text_area("Expected summary (optional):", height=200, value=ds_output)
+    prompt = "Create" if sample is None else "Update"
     if st.form_submit_button(prompt):
         if dataset_input == '':
             st.error('Document cannot be empty')
         else:
-            selected_dataset.samples.append(Sample(len(selected_dataset.samples), dataset_input, dataset_output))
-            selected_dataset.save()
+            if sample:
+                sample.input_data = dataset_input
+                sample.output_data = dataset_output
+                selected_dataset.update_sample(sample)
+            else:
+                selected_dataset.samples.append(Sample(len(selected_dataset.samples), dataset_input, dataset_output))
+                selected_dataset.save()
             st.info('Sample saved to the Library!')
             (datasets, prompts) = table.load_data()
+            st.experimental_rerun()
+
+# Import code below
 
 st.subheader('Dataset import')
 st.write("TODO: some explanation of format")

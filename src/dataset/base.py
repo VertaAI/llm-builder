@@ -36,3 +36,11 @@ class Dataset:
         os.makedirs(directory, exist_ok=True)
         with open(os.path.join(directory, "{}.json".format(self.name)), "w") as f:
             json.dump(dataclasses.asdict(self), f, indent=4)
+
+    def update_sample(self, sample):
+        for s in self.samples:
+            if s.id == sample.id:
+                s.input_data = sample.input_data
+                s.output_data = sample.output_data
+                break
+        self.save()
