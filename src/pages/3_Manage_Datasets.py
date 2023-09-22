@@ -13,13 +13,20 @@ st.set_page_config(layout="wide")
 (datasets, prompts) = table.load_data()
 
 st.subheader('Dataset Management')
+dataset_names = [d.name for d in datasets]
+working_name = st.session_state.pop("dataset_name", None)
+ds_idx = 0
+if working_name is not None:
+    ds_idx = dataset_names.index(working_name)
 
-selected_dataset_name = st.selectbox('Select a dataset to work with:', [d.name for d in datasets])
+selected_dataset_name = st.selectbox('Select a dataset to work with:', dataset_names, index=ds_idx)
 with st.form('create_ds', clear_on_submit=True):
     create_ds_name = st.text_input("Or create a new dataset:", placeholder='Enter a dataset name')
     if st.form_submit_button('Create'):
         Dataset(len(datasets), name=create_ds_name, samples=[]).save()
         st.info('Dataset created!')
+        # select the newly created dataset and rerun
+        st.session_state['dataset_name'] = create_ds_name
         st.experimental_rerun()
 
 
