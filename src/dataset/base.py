@@ -18,6 +18,7 @@ class Sample:
         self.input_data = input_data
         self.output_data = output_data
 
+
 @dataclass_json
 @dataclass
 class Dataset:

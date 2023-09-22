@@ -26,6 +26,16 @@
             "id": 4,
             "input_data": "fugiat labore elit adipiscing commodo in in minim laboris dolore",
             "output_data": "esse irure ut id"
+        },
+        {
+            "id": 5,
+            "input_data": "Zmaj was built in Germany as a seaplane tender for the Royal Yugoslav Navy between 1928 and 1930. She does not appear to have been much used in that role and was converted to a minelayer in 1937. Shortly before the Axis invasion of Yugoslavia in April 1941, she laid minefields along the Dalmatian coast, perhaps inadvertently leading to the sinking of two Yugoslav passenger ships. Slightly damaged by Italian dive bombers and then captured by the Italians during the invasion, she was soon handed over to the Germans. While in their service the ship was renamed Drache, had her anti-aircraft (AA) armament improved, and was used as a seaplane tender and later as a troop transport. In the latter role she participated in over a dozen convoys between the Greek port of Piraeus and the Greek island of Crete between December 1941 and March 1942.\n\nThe ship was rebuilt as a minelayer in mid-1942, and her AA armament was further improved. Soon after being recommissioned in August, she was renamed Schiff 50 and was used to evaluate the shipboard use of helicopters for anti-submarine warfare and mine reconnaissance. Between mid-March and May 1943 she was deployed as a convoy escort in the Aegean Sea. During this time she was involved in a gun duel with a surfaced British submarine, in which she was damaged and several of her crew members were killed or wounded. She continued to operate as both a troop transport and minelayer, laying several minefields in the Aegean. One minefield she laid in the Dodecanese in 1943 sank one British submarine, two Allied destroyers and badly damaged a third destroyer. Her AA armament was further enhanced in 1944 but this did not prevent her from being sunk by British aircraft in September while moored in the port of Vathy on the island of Samos. She was scrapped there after the end of World War II.\n\n",
+            "output_data": ""
+        },
+        {
+            "id": 6,
+            "input_data": "Super duper awesome thing",
+            "output_data": "none"
         }
     ]
 }
