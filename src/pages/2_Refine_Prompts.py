@@ -1,14 +1,13 @@
 import streamlit as st
 
 from table import load_data, create_table
-from models.abc import Model
-from models.nop import Nop
 from prompts.base import Prompt
 from computation import run_computations
+import LLM_Builder
 
 _FORM_VALIDATION_KEY = 'dc_form_validation'
 
-models = st.session_state['models']
+models = LLM_Builder.load_models()
 (datasets, prompts) = load_data()
 
 st.subheader('Prompt playground')

@@ -1,4 +1,9 @@
 import streamlit as st
+import table
+import json
+from dataset.base import Dataset
+
+(datasets, prompts) = table.load_data()
 
 st.subheader('Dataset import')
 st.write("TODO: some explanation of format")
@@ -18,4 +23,3 @@ if uploaded_dataset is not None:
             dataset_dict['name'] = dataset_name
             dataset = Dataset.from_dict(dataset_dict)
             dataset.save()
-            (datasets, prompts) = load_data()

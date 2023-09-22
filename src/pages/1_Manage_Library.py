@@ -3,8 +3,9 @@ import streamlit as st
 
 import table
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, ExcelExportMode, GridOptionsBuilder
+import LLM_Builder
 
-models = st.session_state['models']
+models = LLM_Builder.load_models()
 
 (datasets, prompts) = table.load_data()
 df = table.create_table(datasets, models, prompts, cached=True)
