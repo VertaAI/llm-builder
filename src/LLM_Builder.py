@@ -2,6 +2,7 @@ import streamlit as st
 from typing import List
 from models.nop import Nop
 from models.abc import Model
+from models.davinci import DaVinci
 
 st.set_page_config(page_title='LLM Builder', layout="wide")
 st.write('# Build your LLM Application')
@@ -15,6 +16,6 @@ st.markdown("""
 
 def load_models():
     models: List[Model] = [
-        Nop(0),
+        Nop(0), DaVinci(1)
     ]
     return models

@@ -1,4 +1,6 @@
-streamlit
+streamlit~=1.27.0
 streamlit-aggrid
-pandas
+pandas~=2.1.1
 dataclasses-json
+
+openai~=0.28.0

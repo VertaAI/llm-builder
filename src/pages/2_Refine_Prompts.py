@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 from st_aggrid import GridOptionsBuilder, AgGrid, DataReturnMode, GridUpdateMode, ColumnsAutoSizeMode
+from streamlit.errors import StreamlitAPIException
 
 from table import load_data, create_table
 from prompts.base import Prompt
@@ -8,8 +9,10 @@ from computation import run_computations
 import LLM_Builder
 
 _FORM_VALIDATION_KEY = 'dc_form_validation'
-
-st.set_page_config(layout="wide")
+try:
+    st.set_page_config(layout="wide")
+except StreamlitAPIException:
+    pass
 
 models = LLM_Builder.load_models()
 (datasets, prompts) = load_data()
@@ -61,9 +64,9 @@ with st.form("playground", clear_on_submit=False):
         if len(prompt_content) > 0:
             model = [m for m in models if m.get_name() == model_selection][0]
             dataset = [d for d in datasets if d.name == dataset_selection][0]
-
-            try_table = st.table(
-                create_table([dataset], [model], [Prompt(-1, prompt_content)], cached=False))
+            with st.spinner("Please wait..."):
+                try_table = st.table(
+                    create_table([dataset], [model], [Prompt(-1, prompt_content)], cached=False))
         else:
             if len(prompt_content) == 0:
                 st.session_state['prompt_content'+_FORM_VALIDATION_KEY] = True
