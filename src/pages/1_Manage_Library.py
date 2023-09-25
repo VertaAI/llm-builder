@@ -4,13 +4,18 @@ import streamlit as st
 import table
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder
 import LLM_Builder
+from streamlit.errors import StreamlitAPIException
 
-st.set_page_config(layout="wide")
+try:
+    st.set_page_config(layout="wide")
+except StreamlitAPIException:
+    pass
 
 models = LLM_Builder.load_models()
 
 (datasets, prompts) = table.load_data()
-df = table.create_table(datasets, models, prompts, cached=True)
+with st.spinner("Please wait..."):
+    df = table.create_table(datasets, models, prompts, cached=True)
 
 gb = GridOptionsBuilder.from_dataframe(df)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=True)

@@ -8,7 +8,7 @@ st.set_page_config(page_title='LLM Builder', layout="wide")
 st.write('# Build your LLM Application')
 st.markdown("""
 ## Instructions
-  * Point A
+  * If you are using OpenAI based models, add the OPENAI_API_KEY key to your environment variables and re-run the application.
   * Point B
   * Point C
 """)

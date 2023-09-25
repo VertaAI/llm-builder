@@ -1,41 +1,16 @@
 {
     "id": 0,
-    "name": "et",
+    "name": "Sample Dataset",
     "samples": [
         {
             "id": 0,
-            "input_data": "sint eu dolor Lorem Duis",
-            "output_data": "laborum commodo nostrud"
-        },
-        {
-            "id": 1,
-            "input_data": "dolor adipiscing non",
-            "output_data": "in tempor in veniam consectetur"
-        },
-        {
-            "id": 2,
-            "input_data": "nostrud do laborum sit ut minim officia in",
-            "output_data": "minim dolore"
-        },
-        {
-            "id": 3,
-            "input_data": "tempor et minim nostrud",
-            "output_data": "incididunt elit Excepteur id"
-        },
-        {
-            "id": 4,
-            "input_data": "fugiat labore elit adipiscing commodo in in minim laboris dolore",
-            "output_data": "esse irure ut id"
-        },
-        {
-            "id": 5,
-            "input_data": "Zmaj was built in Germany as a seaplane tender for the Royal Yugoslav Navy between 1928 and 1930. She does not appear to have been much used in that role and was converted to a minelayer in 1937. Shortly before the Axis invasion of Yugoslavia in April 1941, she laid minefields along the Dalmatian coast, perhaps inadvertently leading to the sinking of two Yugoslav passenger ships. Slightly damaged by Italian dive bombers and then captured by the Italians during the invasion, she was soon handed over to the Germans. While in their service the ship was renamed Drache, had her anti-aircraft (AA) armament improved, and was used as a seaplane tender and later as a troop transport. In the latter role she participated in over a dozen convoys between the Greek port of Piraeus and the Greek island of Crete between December 1941 and March 1942.\n\nThe ship was rebuilt as a minelayer in mid-1942, and her AA armament was further improved. Soon after being recommissioned in August, she was renamed Schiff 50 and was used to evaluate the shipboard use of helicopters for anti-submarine warfare and mine reconnaissance. Between mid-March and May 1943 she was deployed as a convoy escort in the Aegean Sea. During this time she was involved in a gun duel with a surfaced British submarine, in which she was damaged and several of her crew members were killed or wounded. She continued to operate as both a troop transport and minelayer, laying several minefields in the Aegean. One minefield she laid in the Dodecanese in 1943 sank one British submarine, two Allied destroyers and badly damaged a third destroyer. Her AA armament was further enhanced in 1944 but this did not prevent her from being sunk by British aircraft in September while moored in the port of Vathy on the island of Samos. She was scrapped there after the end of World War II.\n\n",
+            "input_data": "Generative artificial intelligence (also generative AI or GenAI[1]) is artificial intelligence capable of generating text, images, or other media, using generative models.[2][3][4] Generative AI models learn the patterns and structure of their input training data and then generate new data that has similar characteristics.[5][6]\n\nIn the early 2020s, advances in transformer-based deep neural networks enabled a number of generative AI systems notable for accepting natural language prompts as input. These include large language model chatbots such as ChatGPT, Bing Chat, Bard, and LLaMA, and text-to-image artificial intelligence art systems such as Stable Diffusion, Midjourney, and DALL-E.[7][8][9]\n\nGenerative AI has uses across a wide range of industries, including art, writing, software development, product design, healthcare, finance, gaming, marketing, and fashion.[10][11][12] Investment in generative AI surged during the early 2020s, with large companies such as Microsoft, Google, and Baidu as well as numerous smaller firms developing generative AI models.[2][13][14] However, there are also concerns about the potential misuse of generative AI, including cybercrime or creating fake news or deepfakes which can be used to deceive or manipulate people.[15]",
             "output_data": ""
         },
         {
-            "id": 6,
-            "input_data": "Super duper awesome thing",
-            "output_data": "none"
+            "id": 1,
+            "input_data": "Artificial intelligence (AI) is the intelligence of machines or software, as opposed to the intelligence of humans or animals. It is also the field of study in computer science that develops and studies intelligent machines. \"AI\" may also refer to the machines themselves.\n\nAI technology is widely used throughout industry, government and science. Some high-profile applications are: advanced web search engines (e.g., Google Search), recommendation systems (used by YouTube, Amazon, and Netflix), understanding human speech (such as Siri and Alexa), self-driving cars (e.g., Waymo), generative or creative tools (ChatGPT and AI art), and competing at the highest level in strategic games (such as chess and Go).[1]\n\nArtificial intelligence was founded as an academic discipline in 1956.[2] The field went through multiple cycles of optimism[3][4] followed by disappointment and loss of funding,[5][6] but after 2012, when deep learning surpassed all previous AI techniques,[7] there was a vast increase in funding and interest.\n\nThe various sub-fields of AI research are centered around particular goals and the use of particular tools. The traditional goals of AI research include reasoning, knowledge representation, planning, learning, natural language processing, perception, and support for robotics.[a] General intelligence (the ability to solve an arbitrary problem) is among the field's long-term goals.[8] To solve these problems, AI researchers have adapted and integrated a wide range of problem-solving techniques, including search and mathematical optimization, formal logic, artificial neural networks, and methods based on statistics, probability, and economics.[b] AI also draws upon psychology, linguistics, philosophy, neuroscience and many other fields.",
+            "output_data": ""
         }
     ]
 }
