@@ -1,4 +1,6 @@
+import pandas as pd
 import streamlit as st
+from st_aggrid import GridOptionsBuilder, AgGrid, DataReturnMode, GridUpdateMode, ColumnsAutoSizeMode
 
 from table import load_data, create_table
 from prompts.base import Prompt
@@ -11,6 +13,21 @@ st.set_page_config(layout="wide")
 
 models = LLM_Builder.load_models()
 (datasets, prompts) = load_data()
+
+st.subheader('Prompt Library')
+
+prompt_frame = pd.DataFrame(prompts)
+gb = GridOptionsBuilder.from_dataframe(prompt_frame)
+
+gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, autoHeight=True, wrapText=True)
+gb.configure_selection(selection_mode="single", use_checkbox=False)
+gb.configure_column("id", hide=True)
+samples_grid = AgGrid(
+    prompt_frame,
+    data_return_mode=DataReturnMode.AS_INPUT,
+    update_mode=GridUpdateMode.SELECTION_CHANGED,
+    columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
+    gridOptions=gb.build(), height=500)
 
 st.subheader('Prompt playground')
 with st.form("playground", clear_on_submit=False):
@@ -52,6 +69,7 @@ with st.form("playground", clear_on_submit=False):
             (datasets, prompts) = load_data()
             st.info('Prompt and computations saved to the Library!')
             # TODO: clear rest of playground
+            st.experimental_rerun()
         else:
             if len(prompt_content) == 0:
                 st.session_state['prompt_content'+_FORM_VALIDATION_KEY] = True
