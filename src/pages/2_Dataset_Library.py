@@ -8,7 +8,7 @@ from dataset.base import Sample
 import pandas as pd
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title='Dataset Library', layout="wide")
 
 (datasets, prompts) = table.load_data()
 

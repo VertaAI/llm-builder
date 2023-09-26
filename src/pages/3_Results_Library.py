@@ -7,7 +7,7 @@ import LLM_Builder
 from streamlit.errors import StreamlitAPIException
 
 try:
-    st.set_page_config(layout="wide")
+    st.set_page_config(page_title='Results Library', layout="wide")
 except StreamlitAPIException:
     pass
 

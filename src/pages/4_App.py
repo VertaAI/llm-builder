@@ -1,10 +1,15 @@
-import streamlit as st
-import io, os
-from ai import summarize, refine_task_message_prompt
+import json
+import os
+
 import openai
 import pandas as pd
-import json
-# import docx2txt
+import streamlit as st
+from ai import summarize, refine_task_message_prompt
+
+try:
+    st.set_page_config(page_title='App', layout="wide")
+except StreamlitAPIException:
+    pass
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
@@ -19,6 +24,7 @@ df = pd.DataFrame(data)
 if 'df' not in st.session_state:
     st.session_state['df'] = df
 
+
 # Function to update the table with new data
 def update_table(new_data):
     # Add new data to the dataframe
@@ -28,6 +34,7 @@ def update_table(new_data):
 
     # Display the updated table
     # st.table(st.session_state['df'])
+
 
 # Streamlit app title
 st.title("Document Summarization Bot")
@@ -51,13 +58,14 @@ if st.button("Summarize"):
             # Read text from the uploaded .txt file
             text = uploaded_file.read()
             # call AI model
-            selected_prompt = next(filter(lambda x: x['name']==prompt_name, prompts))
+            selected_prompt = next(filter(lambda x: x['name'] == prompt_name, prompts))
             summary = summarize(text, prompt=selected_prompt["task_message"])
 
             st.write(f"Summary:\n {summary}")
-            result = {"Id" : ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt["task_message"]], "Output": [summary]}
+            result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt["task_message"]],
+                      "Output": [summary]}
             update_table(result)
-            logs.write(json.dumps(result)+"\n")
+            logs.write(json.dumps(result) + "\n")
     else:
         st.warning("Please upload a file first.")
 
@@ -65,7 +73,7 @@ feedback = st.text_input("Provide feedback on the prompt")
 
 if st.button("Auto Refine Prompt"):
     # make call
-    current_prompt = next(filter(lambda x: x['name']==prompt_name, prompts))["task_message"]
+    current_prompt = next(filter(lambda x: x['name'] == prompt_name, prompts))["task_message"]
     recommendation = refine_task_message_prompt(current_prompt, feedback)
     st.write("Recommendation:")
     st.write(recommendation)

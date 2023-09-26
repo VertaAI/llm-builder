@@ -10,7 +10,7 @@ import LLM_Builder
 
 _FORM_VALIDATION_KEY = 'dc_form_validation'
 try:
-    st.set_page_config(layout="wide")
+    st.set_page_config(page_title='Prompt Library', layout="wide")
 except StreamlitAPIException:
     pass
 
