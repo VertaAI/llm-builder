@@ -1,0 +1,6 @@
+{
+    "id": 10,
+    "name": "basic-too-short-3",
+    "description": "",
+    "prompt": "Read the text carefully and create a summary of the main points. Make sure to include enough detail so that the summary accurately reflects the content of the text. Once you have finished, present the summary in the form of bullet points."
+}

@@ -3,7 +3,7 @@ import os
 from dataset.base import Dataset
 import json
 import itertools
-from computation import load_or_compute
+from computation import load
 import pandas as pd
 
 
@@ -51,7 +51,7 @@ def create_table(datasets, models, prompts, cached=True):
     for dataset in datasets:
         for (model, prompt, sample) in itertools.product(models, prompts, dataset.samples):
             if cached:
-                prediction = load_or_compute(model, prompt, dataset, sample)
+                prediction = load(model, prompt, dataset, sample)
             else:
                 prediction = model.predict(prompt, sample.input_data)
             data['model'].append(model.get_name())

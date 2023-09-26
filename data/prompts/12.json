@@ -1,0 +1,6 @@
+{
+    "id": 12,
+    "name": "basic-too-short-5",
+    "description": "",
+    "prompt": "Read the text carefully and create a concise summary of the main points. Start by summarizing each paragraph in a few sentences. Make sure to include enough detail so that the summary accurately reflects the content of the text. Your summary should be at least 300 words. Once you have finished summarizing each paragraph, look back over the summary and make sure to include the key points that were discussed in the text. Make sure to use your own words and avoid using direct quotes from the text."
+}

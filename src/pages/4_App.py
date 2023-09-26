@@ -5,6 +5,7 @@ import openai
 import pandas as pd
 import streamlit as st
 from ai import summarize, refine_task_message_prompt
+from table import load_data
 
 try:
     st.set_page_config(page_title='App', layout="wide")
@@ -12,8 +13,7 @@ except StreamlitAPIException:
     pass
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-
-prompts = json.load(open("../data/app_prompts_temp.json", "r"))
+(_, prompts) = load_data()
 
 # Create an initial dataframe
 data = {'Id': [],
@@ -44,7 +44,7 @@ logs = open("logs.json", "a")
 # Upload a file
 uploaded_file = st.file_uploader("Upload a file (.txt)", type=["txt"])
 
-prompt_name = st.selectbox("Select a prompt", options=[item["name"] for item in prompts], index=0)
+prompt_name = st.selectbox("Select a prompt", options=[item.name for item in prompts], index=0)
 
 # "Summarize" button
 if st.button("Summarize"):
@@ -58,11 +58,11 @@ if st.button("Summarize"):
             # Read text from the uploaded .txt file
             text = uploaded_file.read()
             # call AI model
-            selected_prompt = next(filter(lambda x: x['name'] == prompt_name, prompts))
-            summary = summarize(text, prompt=selected_prompt["task_message"])
+            selected_prompt = next(filter(lambda x: x.name == prompt_name, prompts))
+            summary = summarize(text, prompt=selected_prompt.prompt)
 
             st.write(f"Summary:\n {summary}")
-            result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt["task_message"]],
+            result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
                       "Output": [summary]}
             update_table(result)
             logs.write(json.dumps(result) + "\n")

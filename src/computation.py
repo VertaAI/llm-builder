@@ -38,3 +38,13 @@ def load_or_compute(model, prompt, dataset, sample):
     with open(filepath, "w") as f:
         f.write(result)
     return result
+
+
+def load(model, prompt, dataset, sample):
+    unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, sample.id)
+    filepath = os.path.abspath("../cache/{}".format(unique_id))
+    # If the file exists, load the result from it
+    if os.path.exists(filepath):
+        with open(filepath, "r") as f:
+            return f.read()
+    return ''
