@@ -1,0 +1,52 @@
+[
+    {
+        "name": "basic",
+        "system_message": "",
+        "task_message": "Summarize this succinctly:"
+    },
+    {
+        "name": "lawyer",
+        "system_message": "",
+        "task_message": "Summarize this to sound like a lawyer:"
+    },
+    {
+        "name": "harrypotters",
+        "system_message": "",
+        "task_message": "Summarize this to sound like a Harry Potters:"
+    },
+    {
+        "name": "basic-too-short-1",
+        "system_message": "",
+        "task_message": "Rephrase the content concisely while ensuring that the summary includes all the key points"
+    },
+    {
+        "name": "basic-too-short-2",
+        "system_message": "",
+        "task_message": "Read the text carefully and summarize its main points in your own words. Be sure to include enough detail so that the summary accurately reflects the content of the text."
+    },
+    {
+        "name": "basic-too-short-3",
+        "system_message": "",
+        "task_message": "Read the text carefully and create a summary of the main points. Make sure to include enough detail so that the summary accurately reflects the content of the text. Once you have finished, present the summary in the form of bullet points."
+    },
+    {
+        "name": "basic-too-short-4",
+        "system_message": "",
+        "task_message": "Read the text carefully and create a concise summary of the main points. Make sure to include enough detail so that the summary accurately reflects the content of the text. Your summary should be at least 300 words. Once you have finished, present the summary in the form of a paragraph or multiple paragraphs. Make sure to include the key points that were discussed in the text. Make sure to use your own words and avoid using direct quotes from the text."
+    },
+    {
+        "name": "basic-too-short-5",
+        "system_message": "",
+        "task_message": "Read the text carefully and create a concise summary of the main points. Start by summarizing each paragraph in a few sentences. Make sure to include enough detail so that the summary accurately reflects the content of the text. Your summary should be at least 300 words. Once you have finished summarizing each paragraph, look back over the summary and make sure to include the key points that were discussed in the text. Make sure to use your own words and avoid using direct quotes from the text."
+    },
+    {
+        "name": "basic-too-short-6",
+        "system_message": "",
+        "task_message": " Read the text carefully and create a concise summary of the main points. Start by summarizing each paragraph in a few sentences. Make sure to include enough detail so that the summary accurately reflects the content of the text. Your summary should be at least 300 words. For each paragraph, include a brief summary and the paragraph number next to it. Once you have finished summarizing each paragraph, look back over the summary and make sure to include the key points that were discussed in the text. Make sure to use your own words and avoid using direct quotes from the text."
+    },
+    {
+        "name": "cod-1",
+        "system_message": "",
+        "task_message": "You will generate increasingly concise, entity-dense summaries of the article below. \nRepeat the following 2 steps 5 times.\nStep 1. Identify 1-3 informative entities (\";\" delimited) from the article which are missing from the previously generated summary.\nStep 2. Write a new, denser summary of identical length which covers every entity and detail from the previous summary plus the missing entities.\nA missing entity is:\n- relevant to the main story,\n- specific yet concise (5 words or fewer),\n- novel (not in the previous summary),\n- faithful (present in the article),\n- anywhere (can be located anywhere in the article).\nGuidelines:\n - The first summary should be long (4-5 sentences, ~80 words) yet highly non-specific, containing little information beyond the entities marked as missing. Use overly verbose language and fillers (e.g., \"this article discusses\") to reach ~80 words.\n- Make every word count: rewrite the previous summary to improve flow and make space for additional entities.\n- Make space with fusion, compression, and removal of uninformative phrases like \"the article discusses\".\n- The summaries should become highly dense and concise yet self-contained, i.e., easily understood without the article.\n- Missing entities can appear anywhere in the new summary.\n- Never drop entities from the previous summary. If space cannot be made, add fewer new entities.\n Remember, use the exact same number of words for each summary. Answer in JSON. The JSON should be a list (length 5) of dictionaries whose keys are \"Missing_Entities\" and \"Denser_Summary\".\nArticle:"
+    }
+]
