@@ -2,7 +2,7 @@ import os
 import random
 from typing import List
 
-from dataset.base import Dataset, Sample
+from dataset.base import Dataset, Record
 from prompts.base import Prompt
 
 # List of sample words
@@ -28,7 +28,7 @@ def generate_string(min_words=5, max_words=10):
 def generate_data():
     datasets: List[Dataset] = [
         Dataset(i, generate_string(1, 1), [
-            Sample(j, generate_string(1, 10), generate_string(1, 10))
+            Record(j, generate_string(1, 10), generate_string(1, 10))
             for j in range(5)
         ])
         for i in range(1)

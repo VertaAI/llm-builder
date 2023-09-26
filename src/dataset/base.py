@@ -8,15 +8,19 @@ import dataclasses
 
 @dataclass_json
 @dataclass
-class Sample:
+class Record:
     id: int
     input_data: str
-    output_data: str
+    ground_truth: str
+    type: str
+    metadata: str
 
-    def __init__(self, id: int, input_data: str, output_data: str):
+    def __init__(self, id: int, input_data: str, ground_truth: str, type: str = "text", metadata: str = "{}"):
         self.id = id
         self.input_data = input_data
-        self.output_data = output_data
+        self.ground_truth = ground_truth
+        self.type = type
+        self.metadata = metadata
 
 
 @dataclass_json
@@ -24,12 +28,12 @@ class Sample:
 class Dataset:
     id: int
     name: str
-    samples: List[Sample]
+    records: List[Record]
 
-    def __init__(self, id: int, name: str, samples: List[Sample]):
+    def __init__(self, id: int, name: str, records: List[Record]):
         self.id = id
         self.name = name
-        self.samples = samples
+        self.records = records
 
     def save(self):
         directory = "../data/datasets"
@@ -37,10 +41,10 @@ class Dataset:
         with open(os.path.join(directory, "{}.json".format(self.name)), "w") as f:
             json.dump(dataclasses.asdict(self), f, indent=4)
 
-    def update_sample(self, sample):
-        for s in self.samples:
-            if s.id == sample.id:
-                s.input_data = sample.input_data
-                s.output_data = sample.output_data
+    def update_record(self, record):
+        for s in self.records:
+            if s.id == record.id:
+                s.input_data = record.input_data
+                s.ground_truth = record.ground_truth
                 break
         self.save()

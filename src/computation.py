@@ -7,11 +7,11 @@ def run_computations(model, prompt, dataset):
     if not os.path.exists("../cache"):
         os.makedirs("../cache")
 
-    for sample in dataset.samples:
+    for record in dataset.records:
         unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id,
-                                                                         sample.id)
+                                                                         record.id)
 
-        result = model.predict(prompt, sample.input_data)
+        result = model.predict(prompt, record.input_data)
         # Save result to the given file
         filepath = os.path.abspath("../cache/{}".format(unique_id))
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
@@ -24,8 +24,8 @@ def run_all_computations(models, prompts, datasets):
         run_computations(model, prompt, dataset)
 
 
-def load_or_compute(model, prompt, dataset, sample):
-    unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, sample.id)
+def load_or_compute(model, prompt, dataset, record):
+    unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, record.id)
     filepath = os.path.abspath("../cache/{}".format(unique_id))
     # If the file exists, load the result from it
     if os.path.exists(filepath):
@@ -33,15 +33,15 @@ def load_or_compute(model, prompt, dataset, sample):
             return f.read()
 
     # Otherwise, compute the result and save it to the file
-    result = model.predict(prompt, sample.input_data)
+    result = model.predict(prompt, record.input_data)
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     with open(filepath, "w") as f:
         f.write(result)
     return result
 
 
-def load(model, prompt, dataset, sample):
-    unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, sample.id)
+def load(model, prompt, dataset, record):
+    unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, record.id)
     filepath = os.path.abspath("../cache/{}".format(unique_id))
     # If the file exists, load the result from it
     if os.path.exists(filepath):

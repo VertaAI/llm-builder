@@ -42,24 +42,24 @@ def create_table(datasets, models, prompts, cached=True):
         'model': [],
         'prompt content': [],
         'dataset': [],
-        'sample id': [],
-        'sample input': [],
-        'sample output': [],
+        'record id': [],
+        'record input': [],
+        'ground truth': [],
         'prediction': [],
     }
 
     for dataset in datasets:
-        for (model, prompt, sample) in itertools.product(models, prompts, dataset.samples):
+        for (model, prompt, record) in itertools.product(models, prompts, dataset.records):
             if cached:
-                prediction = load(model, prompt, dataset, sample)
+                prediction = load(model, prompt, dataset, record)
             else:
-                prediction = model.predict(prompt, sample.input_data)
+                prediction = model.predict(prompt, record.input_data)
             data['model'].append(model.get_name())
             data['prompt content'].append(prompt.prompt)
             data['dataset'].append(dataset.name)
-            data['sample id'].append(sample.id)
-            data['sample input'].append(sample.input_data)
-            data['sample output'].append(sample.output_data)
+            data['record id'].append(record.id)
+            data['record input'].append(record.input_data)
+            data['ground truth'].append(record.ground_truth)
             data['prediction'].append(prediction)
 
     df = pd.DataFrame(data)

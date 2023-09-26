@@ -1,14 +1,18 @@
 {
-    "samples": [
+    "records": [
         {
             "id": 0,
             "input_data": "my data",
-            "output_data": "is awesome"
+            "ground_truth": "is awesome",
+            "type": "text",
+            "metadata": "{}"
         },
         {
             "id": 1,
             "input_data": "my other data",
-            "output_data": "is kind of ok"
+            "ground_truth": "is kind of ok",
+            "type": "text",
+            "metadata": "{}"
         }
     ]
 }

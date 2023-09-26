@@ -1,16 +1,20 @@
 {
     "id": 0,
     "name": "Sample Dataset",
-    "samples": [
+    "records": [
         {
             "id": 0,
             "input_data": "Generative artificial intelligence (also generative AI or GenAI[1]) is artificial intelligence capable of generating text, images, or other media, using generative models.[2][3][4] Generative AI models learn the patterns and structure of their input training data and then generate new data that has similar characteristics.[5][6]\n\nIn the early 2020s, advances in transformer-based deep neural networks enabled a number of generative AI systems notable for accepting natural language prompts as input. These include large language model chatbots such as ChatGPT, Bing Chat, Bard, and LLaMA, and text-to-image artificial intelligence art systems such as Stable Diffusion, Midjourney, and DALL-E.[7][8][9]\n\nGenerative AI has uses across a wide range of industries, including art, writing, software development, product design, healthcare, finance, gaming, marketing, and fashion.[10][11][12] Investment in generative AI surged during the early 2020s, with large companies such as Microsoft, Google, and Baidu as well as numerous smaller firms developing generative AI models.[2][13][14] However, there are also concerns about the potential misuse of generative AI, including cybercrime or creating fake news or deepfakes which can be used to deceive or manipulate people.[15]",
-            "output_data": ""
+            "ground_truth": "",
+            "metadata": "{}",
+            "type": "text"
         },
         {
             "id": 1,
             "input_data": "Artificial intelligence (AI) is the intelligence of machines or software, as opposed to the intelligence of humans or animals. It is also the field of study in computer science that develops and studies intelligent machines. \"AI\" may also refer to the machines themselves.\n\nAI technology is widely used throughout industry, government and science. Some high-profile applications are: advanced web search engines (e.g., Google Search), recommendation systems (used by YouTube, Amazon, and Netflix), understanding human speech (such as Siri and Alexa), self-driving cars (e.g., Waymo), generative or creative tools (ChatGPT and AI art), and competing at the highest level in strategic games (such as chess and Go).[1]\n\nArtificial intelligence was founded as an academic discipline in 1956.[2] The field went through multiple cycles of optimism[3][4] followed by disappointment and loss of funding,[5][6] but after 2012, when deep learning surpassed all previous AI techniques,[7] there was a vast increase in funding and interest.\n\nThe various sub-fields of AI research are centered around particular goals and the use of particular tools. The traditional goals of AI research include reasoning, knowledge representation, planning, learning, natural language processing, perception, and support for robotics.[a] General intelligence (the ability to solve an arbitrary problem) is among the field's long-term goals.[8] To solve these problems, AI researchers have adapted and integrated a wide range of problem-solving techniques, including search and mathematical optimization, formal logic, artificial neural networks, and methods based on statistics, probability, and economics.[b] AI also draws upon psychology, linguistics, philosophy, neuroscience and many other fields.",
-            "output_data": ""
+            "ground_truth": "",
+            "metadata": "{}",
+            "type": "text"
         }
     ]
 }
