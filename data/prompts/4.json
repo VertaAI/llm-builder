@@ -1,4 +1,6 @@
 {
     "id": 4,
+    "name": "five",
+    "description": "",
     "prompt": "You are an expert at summarizing documents. You are to follow the instructions given below:\n\n1. Keep the summary under 300 words.\n2. Explain it briefly and keep it easy to understand.\n3. Keep it to the point and do not add any information which cannot be inferred from the information provided.\n\nProvide a brief summary for the context given below. After you rewrite the summary, re-read and figure out the key points missed and return a revised summary with everything included. Only return the revised summary.\n\nDocument: "
 }

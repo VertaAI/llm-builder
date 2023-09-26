@@ -4,14 +4,19 @@ import json
 import dataclasses
 import os
 
+
 @dataclass_json
 @dataclass
 class Prompt:
     id: int
+    name: str
+    description: str
     prompt: str
 
-    def __init__(self, id: int, prompt: str):
+    def __init__(self, id: int, name: str, description: str, prompt: str):
         self.id = id
+        self.name = name
+        self.description = description
         self.prompt = prompt
 
     def save(self):

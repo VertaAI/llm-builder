@@ -47,9 +47,18 @@ with st.form("playground", clear_on_submit=False):
     dataset_options = [dataset.name for dataset in datasets]
     dataset_selection = st.selectbox('Select a dataset:', dataset_options)
 
+    if st.session_state.pop('prompt_name'+_FORM_VALIDATION_KEY, None):
+        st.error('Prompt name cannot be empty')
+
+    if prompt:
+        prompt_name = st.text_input('Name:', key='prompt_name', value=prompt['name'])
+        prompt_description = st.text_input('Description (optional):', key='prompt_desc', value=prompt['description'])
+    else:
+        prompt_name = st.text_input('Name:', key='prompt_name')
+        prompt_description = st.text_input('Description (optional):', key='prompt_desc')
+
     if st.session_state.pop('prompt_content'+_FORM_VALIDATION_KEY, None):
         st.error('Prompt content cannot be empty')
-
     if prompt:
         prompt_content = st.text_area('Enter a prompt:', height=200, key='prompt_content', value=prompt['prompt'])
     else:
@@ -61,15 +70,17 @@ with st.form("playground", clear_on_submit=False):
     with f2:
         save_button = st.form_submit_button("Save prompt")
     if try_button:
-        if len(prompt_content) > 0:
+        if len(prompt_content) > 0 and len(prompt_name) > 0:
             model = [m for m in models if m.get_name() == model_selection][0]
             dataset = [d for d in datasets if d.name == dataset_selection][0]
             with st.spinner("Please wait..."):
                 try_table = st.table(
-                    create_table([dataset], [model], [Prompt(-1, prompt_content)], cached=False))
+                    create_table([dataset], [model], [Prompt(-1, prompt_name, prompt_description, prompt_content)], cached=False))
         else:
             if len(prompt_content) == 0:
                 st.session_state['prompt_content'+_FORM_VALIDATION_KEY] = True
+            if len(prompt_name) == 0:
+                st.session_state['prompt_name'+_FORM_VALIDATION_KEY] = True
             st.experimental_rerun()
 
     if save_button:
@@ -80,7 +91,7 @@ with st.form("playground", clear_on_submit=False):
                 prompt_id = prompt['id']
             else:
                 prompt_id = len(prompts)
-            prompt = Prompt(prompt_id, prompt_content)
+            prompt = Prompt(prompt_id, prompt_name, prompt_description, prompt_content)
             prompt.save()
             run_computations(model, prompt, dataset)
             (datasets, prompts) = load_data()
