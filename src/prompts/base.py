@@ -19,6 +19,9 @@ class Prompt:
         self.description = description
         self.prompt = prompt
 
+    def get_name(self):
+        return self.name
+
     def save(self):
         directory = "../data/prompts"
         os.makedirs(directory, exist_ok=True)

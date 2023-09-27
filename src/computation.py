@@ -2,6 +2,15 @@ import itertools
 import os
 
 
+def write_result(model, prompt, dataset, record, result):
+    unique_id = "model_{}/prompt_{}/dataset_{}/sample_{}.txt".format(model.get_name(), prompt.id, dataset.id, record.id)
+
+    # Save result to the given file
+    filepath = os.path.abspath("../cache/{}".format(unique_id))
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    with open(filepath, "w") as f:
+        f.write(result)
+
 def run_computations(model, prompt, dataset):
     # Create cache folder
     if not os.path.exists("../cache"):

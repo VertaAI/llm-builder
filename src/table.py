@@ -6,6 +6,8 @@ import itertools
 from computation import load
 import pandas as pd
 
+def load_config():
+    return json.load(open("../data/app_config.json"))
 
 def load_data():
     # Load datasets from yaml files

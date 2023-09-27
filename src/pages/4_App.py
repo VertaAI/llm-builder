@@ -5,7 +5,7 @@ import openai
 import pandas as pd
 import streamlit as st
 from ai import summarize, refine_task_message_prompt
-from table import load_data
+from table import load_data, load_config
 
 try:
     st.set_page_config(page_title='App', layout="wide")
@@ -14,6 +14,7 @@ except StreamlitAPIException:
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 (_, prompts) = load_data()
+config = load_config()
 
 # Create an initial dataframe
 data = {'Id': [],
@@ -32,9 +33,6 @@ def update_table(new_data):
     df_updated = pd.concat([st.session_state['df'], df_new], ignore_index=True)
     st.session_state['df'] = df_updated
 
-    # Display the updated table
-    # st.table(st.session_state['df'])
-
 
 # Streamlit app title
 st.title("Document Summarization Bot")
@@ -44,7 +42,7 @@ logs = open("logs.json", "a")
 # Upload a file
 uploaded_file = st.file_uploader("Upload a file (.txt)", type=["txt"])
 
-prompt_name = st.selectbox("Select a prompt", options=[item.name for item in prompts], index=0)
+prompt_name = config["prompt"]
 
 # "Summarize" button
 if st.button("Summarize"):
@@ -69,19 +67,19 @@ if st.button("Summarize"):
     else:
         st.warning("Please upload a file first.")
 
-feedback = st.text_input("Provide feedback on the prompt")
+# feedback = st.text_input("Provide feedback on the prompt")
 
-if st.button("Auto Refine Prompt"):
-    # make call
-    current_prompt = next(filter(lambda x: x['name'] == prompt_name, prompts))["task_message"]
-    recommendation = refine_task_message_prompt(current_prompt, feedback)
-    st.write("Recommendation:")
-    st.write(recommendation)
-    pass
+# if st.button("Auto Refine Prompt"):
+#     # make call
+#     current_prompt = next(filter(lambda x: x['name'] == prompt_name, prompts))["task_message"]
+#     recommendation = refine_task_message_prompt(current_prompt, feedback)
+#     st.write("Recommendation:")
+#     st.write(recommendation)
+#     pass
 
-if st.button("Add to prompt library"):
-    pass
+# if st.button("Add to prompt library"):
+#     pass
 
 st.write('Experimentation Trace')
 st.table(st.session_state['df'])
-st.button("Analyze with Verta")
+# st.button("Analyze with Verta")
