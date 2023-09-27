@@ -8,10 +8,13 @@ from ai import summarize, refine_task_message_prompt
 import os
 import openai
 from prompts.base import Prompt
+from dataset.base import Dataset, Record
+import computation
 
 st.set_page_config(page_title='LLM Builder', layout="wide")
             
 _FORM_VALIDATION_KEY = 'dc_form_validation'
+
 
 def load_models() :
     models: List[Model] = [
@@ -23,6 +26,10 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 
 models = load_models()
 (datasets, prompts) = load_data()
+
+# find the scratch dataset to write to
+scratch_dataset: Dataset = next(filter(lambda x: x.name == "Scratch Dataset", datasets))
+
 config = load_config()
 if "prompts" not in st.session_state:
   st.session_state["prompts"] = []
@@ -44,11 +51,13 @@ with col1:
         text = uploaded_file.read()
         # call AI model
         selected_prompt = next(filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
-        summary = summarize(text, prompt=selected_prompt.prompt)
-
+        model = next(filter(lambda x: x.get_name() == st.session_state["model_selection"], models))
+        summary = model.predict(selected_prompt, text)
         st.write(f"Summary:\n {summary}")
         result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
                     "Output": [summary]}
+        new_record = scratch_dataset.add_record(str(text))
+        computation.write_result(model, selected_prompt, scratch_dataset, new_record, summary)
       else:
           st.warning("Please upload a file first.")
 
@@ -56,7 +65,7 @@ with col2:
   st.subheader('Configuration')
   with st.expander("Model Configuration"):
     model_options = [model.get_name() for model in models]
-    model_selection = st.selectbox('Select a model:', model_options)
+    model_selection = st.selectbox('Select a model:', model_options, key="model_selection")
 
   # dataset_options = [dataset.name for dataset in datasets]
   # dataset_selection = st.selectbox('Select a dataset:', dataset_options)

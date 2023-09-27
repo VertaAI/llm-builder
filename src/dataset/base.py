@@ -48,3 +48,9 @@ class Dataset:
                 s.ground_truth = record.ground_truth
                 break
         self.save()
+
+    def add_record(self, record_content: str, ground_truth: str = ""):
+        record = Record(len(self.records), record_content, ground_truth)
+        self.records.append(record)
+        self.save()
+        return record
