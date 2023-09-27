@@ -1,6 +1,5 @@
 import streamlit as st
 from typing import List
-from models.nop import Nop
 from models.abc import Model
 from models.davinci import DaVinci
 from table import load_data, load_config
@@ -16,9 +15,9 @@ st.set_page_config(page_title='LLM Builder', layout="wide")
 _FORM_VALIDATION_KEY = 'dc_form_validation'
 
 
-def load_models() :
+def load_models():
     models: List[Model] = [
-        Nop(0), DaVinci(1)
+        DaVinci(1)
     ]
     return models
 
