@@ -88,24 +88,28 @@ with st.expander('New Dataset Import'):
     create_ds_name = st.text_input("Dataset Name:", placeholder='Enter a dataset name')
 
     if st.button("Create Dataset"):
-        dataset_id = len(datasets)
-        dataset_dict = {}
-        dataset_dict['id'] = dataset_id
-        dataset_dict['name'] = create_ds_name
-        
-        records = []
-        for idx, url in enumerate(urls.split("\n")):
-            records.append(Record(
-                id=idx,
-                input_data=url,
-                ground_truth="",
-                type="url"
-            ))
+        if urls == '':
+            st.error('URLs cannot be empty')
+        elif create_ds_name == '':
+            st.error('Dataset name cannot be empty')
+        else:
+            dataset_id = len(datasets)
+            dataset_dict = {'id': dataset_id, 'name': create_ds_name}
 
-        dataset_dict['records'] = records
-        dataset = Dataset.from_dict(dataset_dict)
-        dataset.save()
-        st.experimental_rerun()
+            records = []
+            for idx, url in enumerate(urls.split("\n")):
+                records.append(Record(
+                    id=idx,
+                    input_data=url,
+                    ground_truth="",
+                    type="url"
+                ))
+
+            dataset_dict['records'] = records
+            dataset = Dataset.from_dict(dataset_dict)
+            dataset.save()
+            st.info("Dataset created!")
+            st.experimental_rerun()
 
 # uploaded_dataset = st.file_uploader("Dataset to import:", type=["csv", "json"])
 # if uploaded_dataset is not None:
