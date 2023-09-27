@@ -4,3 +4,4 @@ pandas~=2.1.1
 dataclasses-json
 
 openai~=0.28.0
+beautifulsoup4
