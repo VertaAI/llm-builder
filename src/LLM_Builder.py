@@ -1,5 +1,4 @@
 import os
-from typing import List
 
 import openai
 import streamlit as st
@@ -10,7 +9,6 @@ import table
 from ai import Doc
 from ai import refine_task_message_prompt
 from dataset.base import Dataset
-from models.abc import Model
 from models.davinci import DaVinci
 from models.chatgpt import ChatGPT
 from models.chatgpt16k import ChatGPT16k
@@ -23,8 +21,7 @@ _FORM_VALIDATION_KEY = "dc_form_validation"
 
 
 def load_models():
-    models: List[Model] = [DaVinci(1), ChatGPT(2), ChatGPT16k(3)]
-    return models
+    return [DaVinci(1), ChatGPT(2), ChatGPT16k(3)]
 
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -162,16 +159,6 @@ with col2:
         )
         prompt = prompt.to_dict()
 
-        # if st.session_state.pop('prompt_name'+_FORM_VALIDATION_KEY, None):
-        #     st.error('Prompt name cannot be empty')
-
-        # if prompt:
-        #     # prompt_name = st.text_input('Name:', key='prompt_name', value=prompt['name'])
-        #     prompt_description = st.text_input('Description:', key='prompt_desc', value=prompt['description'])
-        # else:
-        #     # prompt_name = st.text_input('Name:', key='prompt_name')
-        #     prompt_description = st.text_input('Description:', key='prompt_desc')
-
         if st.session_state.pop("prompt_content" + _FORM_VALIDATION_KEY, None):
             st.error("Prompt content cannot be empty")
         if prompt:
@@ -182,23 +169,29 @@ with col2:
             prompt_content = st.text_area(
                 "Prompt Text:", height=200, key="prompt_content"
             )
+        with st.form("save_prompt", clear_on_submit=True):
+            if st.session_state.pop("new_prompt_name" + _FORM_VALIDATION_KEY, None):
+                st.error("Prompt name cannot be empty")
+            new_prompt_name = st.text_input('Create new prompt', key='new_prompt_name', placeholder='Enter new prompt name')
+            save_button = st.form_submit_button("Save")
 
-        save_button = st.button("Save as new prompt")
-        if save_button:
-            if len(prompt_content) > 0:
-                prompt_id = len(prompts)
-                prompt = Prompt(
-                    prompt_id,
-                    prompt["name"] + "-edited",
-                    "Edited version of Prompt Id" + str(prompt["id"]),
-                    prompt_content,
-                )
-                prompt.save()
-                st.experimental_rerun()
-            else:
-                if len(prompt_content) == 0:
-                    st.session_state["prompt_content" + _FORM_VALIDATION_KEY] = True
-                st.experimental_rerun()
+            if save_button:
+                if len(prompt_content) > 0 and len(new_prompt_name) > 0:
+                    prompt_id = len(prompts)
+                    prompt = Prompt(
+                        prompt_id,
+                        new_prompt_name,
+                        "Edited version of Prompt Id" + str(prompt["id"]),
+                        prompt_content,
+                    )
+                    prompt.save()
+                    st.experimental_rerun()
+                else:
+                    if len(new_prompt_name) == 0:
+                        st.session_state["new_prompt_name" + _FORM_VALIDATION_KEY] = True
+                    if len(prompt_content) == 0:
+                        st.session_state["prompt_content" + _FORM_VALIDATION_KEY] = True
+                    st.experimental_rerun()
 
         st.markdown("<hr>", unsafe_allow_html=True)
 
