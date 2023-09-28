@@ -1,7 +1,8 @@
 import os
 
-from .abc import Model
 import openai
+
+from .abc import Model
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 

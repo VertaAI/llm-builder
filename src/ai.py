@@ -1,13 +1,13 @@
-import openai
-from dataclasses import dataclass
-import requests
-from bs4 import BeautifulSoup
-import validators
-from typing import Union
-import os
 import io
-from bs4.element import Comment
+import os
 import urllib
+from dataclasses import dataclass
+from typing import Union
+
+import openai
+import requests
+import validators
+from bs4 import BeautifulSoup
 
 
 @dataclass

@@ -1,11 +1,8 @@
-import time
-
+import pandas as pd
 import streamlit as st
 import table
-import json
 from dataset.base import Dataset
 from dataset.base import Record
-import pandas as pd
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 
 st.set_page_config(page_title='Dataset Library', layout="wide")
@@ -73,7 +70,8 @@ with st.expander('Edit Current Dataset'):
                     record.ground_truth = dataset_output
                     selected_dataset.update_record(record)
                 else:
-                    selected_dataset.records.append(Record(len(selected_dataset.records), dataset_input, dataset_output))
+                    selected_dataset.records.append(
+                        Record(len(selected_dataset.records), dataset_input, dataset_output))
                     selected_dataset.save()
                 st.info('Record saved to the Library!')
                 (datasets, prompts) = table.load_data()

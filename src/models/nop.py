@@ -1,5 +1,6 @@
-from .abc import Model
 from testing import generate_string
+
+from .abc import Model
 
 
 class Nop(Model):

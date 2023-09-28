@@ -1,13 +1,17 @@
-from prompts.base import Prompt
-import os
-from dataset.base import Dataset
-import json
 import itertools
-from computation import load
+import json
+import os
+
 import pandas as pd
+
+from computation import load
+from dataset.base import Dataset
+from prompts.base import Prompt
+
 
 def load_config():
     return json.load(open("../data/app_config.json"))
+
 
 def load_datasets():
     # Load datasets from yaml files
@@ -23,6 +27,7 @@ def load_datasets():
                 # Add the dataset to the list of datasets
                 datasets.append(dataset)
     return datasets
+
 
 def load_data():
     # Load datasets from yaml files
@@ -83,6 +88,7 @@ def create_table(datasets, models, prompts, cached=True):
 
     return df
 
+
 def create_empty_table():
     data = {
         'model': ['davinci', 'davinci'],
@@ -99,8 +105,8 @@ def create_empty_table():
 
     return df
 
-def read_results():
 
+def read_results():
     from pathlib import Path
     path = str(Path(os.path.abspath(__file__)).parent.parent.as_posix()) + "/cache/"
     import glob
@@ -125,7 +131,7 @@ def read_results():
         prediction = ""
         with open(filename, "r") as f:
             prediction = f.read().strip()
-        
+
         # read record
         dataset = None
         with open("../data/datasets/{}.json".format(dataset_id), "r") as f:
@@ -134,7 +140,7 @@ def read_results():
             dataset = Dataset.from_dict(dataset)
 
         record = next(filter(lambda rec: str(rec.id) == str(record_id), dataset.records))
-        
+
         data['model'].append(model_name)
         data['prompt'].append(prompt_id)
         data['dataset'].append(dataset_id)
@@ -146,4 +152,3 @@ def read_results():
     df = pd.DataFrame(data)
 
     return df
-

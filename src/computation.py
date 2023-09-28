@@ -11,6 +11,7 @@ def write_result(model, prompt, dataset, record, result):
     with open(filepath, "w") as f:
         f.write(result)
 
+
 def run_computations(model, prompt, dataset):
     # Create cache folder
     if not os.path.exists("../cache"):

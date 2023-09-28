@@ -1,13 +1,12 @@
-import json
 import os
 
 import openai
 import pandas as pd
 import streamlit as st
-from streamlit.errors import StreamlitAPIException
-from ai import summarize, refine_task_message_prompt
-from table import load_data, load_config, load_datasets
 from ai import Doc
+from ai import summarize
+from streamlit.errors import StreamlitAPIException
+from table import load_data, load_config, load_datasets
 
 try:
     st.set_page_config(page_title="App", layout="wide")
@@ -45,8 +44,8 @@ if input_method == "File":
     uploaded_file = st.file_uploader("Upload a file (.txt)", type=["txt"])
     if uploaded_file is not None:
         if (
-            uploaded_file.type
-            == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                uploaded_file.type
+                == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ):
             # Convert .docx to text
             # text = docx2txt.process(uploaded_file)
@@ -110,4 +109,3 @@ if st.button("Summarize"):
 
 st.write("Experimentation Trace")
 st.table(st.session_state["df"])
-# st.button("Analyze with Verta")

@@ -1,9 +1,10 @@
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json
-from typing import List
-import os
-import json
 import dataclasses
+import json
+import os
+from dataclasses import dataclass
+from typing import List
+
+from dataclasses_json import dataclass_json
 
 
 @dataclass_json
