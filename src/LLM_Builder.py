@@ -84,20 +84,25 @@ with col1:
             )
 
             def single_prompt_prediction(selected_prompt, doc: Doc):
-                summary = model.predict(selected_prompt, doc.content)
+                summary = model.predict(selected_prompt, doc.content.strip())
                 st.subheader("Generated Summary")
                 st.write(summary)
                 # result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
                 #             "Output": [summary]}
                 if doc.url.strip():
-                    new_record = scratch_dataset.add_record(str(doc.url), type="url")
+                    new_record = scratch_dataset.add_record(
+                        str(doc.url),
+                        type="url",
+                    )
                 elif doc.filename.strip():
                     new_record = scratch_dataset.add_record(
-                        str(doc.filename), type="file"
+                        str(doc.filename),
+                        type="file",
                     )
                 else:
                     new_record = scratch_dataset.add_record(
-                        str(doc.content), type="text"
+                        str(doc.content),
+                        type="text",
                     )
                 computation.write_result(
                     model, selected_prompt, scratch_dataset, new_record, summary
@@ -123,7 +128,7 @@ with col1:
                         single_prompt_prediction(selected_prompt, record_doc)
                     else:
                         for selected_prompt in prompts:
-                            single_prompt_prediction(selected_prompt, record)
+                            single_prompt_prediction(selected_prompt, record_doc)
             elif input_doc.content.strip():
                 text = input_doc.content
                 if input_doc.filename:

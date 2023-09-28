@@ -16,7 +16,14 @@ class Record:
     type: str
     metadata: str
 
-    def __init__(self, id: int, input_data: str, ground_truth: str, type: str = "text", metadata: str = "{}"):
+    def __init__(
+        self,
+        id: int,
+        input_data: str,
+        ground_truth: str,
+        type: str = "text",
+        metadata: str = "{}",
+    ):
         self.id = id
         self.input_data = input_data
         self.ground_truth = ground_truth
@@ -50,8 +57,10 @@ class Dataset:
                 break
         self.save()
 
-    def add_record(self, record_content: str, ground_truth: str = ""):
-        record = Record(len(self.records), record_content, ground_truth)
+    def add_record(
+        self, record_content: str, ground_truth: str = "", type: str = "text"
+    ):
+        record = Record(len(self.records), record_content, ground_truth, type)
         self.records.append(record)
         self.save()
         return record
