@@ -33,5 +33,5 @@ class ChatGPT16k(Model):
             stop=None,
             temperature=0.5,
         )
-        print("Call complete. result: " + str(completions.choices["0"].message))
+        print("Call complete. result: " + str(completions.choices[0].message))
         return completions.choices[0].message["content"]

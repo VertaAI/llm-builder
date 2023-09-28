@@ -7,7 +7,7 @@ import computation
 import table
 from ai import Doc
 from ai import refine_task_message_prompt
-from dataset.base import Dataset
+from dataset.base import Dataset, Record
 from models.davinci import DaVinci
 from models.chatgpt import ChatGPT
 from models.chatgpt16k import ChatGPT16k
@@ -82,26 +82,39 @@ with col1:
                 )
             )
 
-            def single_prompt_prediction(selected_prompt, doc: Doc):
-                summary = model.predict(selected_prompt, doc.content)
-                if doc.url.strip():
-                    new_record = scratch_dataset.add_record(
-                        str(doc.url),
-                        type="url",
-                    )
-                elif doc.filename.strip():
-                    new_record = scratch_dataset.add_record(
-                        str(doc.filename),
-                        type="file",
-                    )
+            def single_prompt_prediction(
+                selected_prompt,
+                doc: Doc,
+                record_id: int = -1,
+                dataset_id: int = -1,
+                add_to_dataset=True,
+            ):
+                summary = model.predict(selected_prompt, doc.content.strip())
+                if add_to_dataset:
+                    if doc.url.strip():
+                        new_record = scratch_dataset.add_record(
+                            str(doc.url),
+                            type="url",
+                        )
+                    elif doc.filename.strip():
+                        new_record = scratch_dataset.add_record(
+                            str(doc.filename),
+                            type="file",
+                        )
+                    else:
+                        new_record = scratch_dataset.add_record(
+                            str(doc.content),
+                            type="text",
+                        )
+                        computation.write_result(
+                            model, selected_prompt, scratch_dataset, new_record, summary
+                        )
                 else:
-                    new_record = scratch_dataset.add_record(
-                        str(doc.content),
-                        type="text",
+                    dummy_rec = Record(id=record_id, input_data="", ground_truth="")
+                    dummy_ds = Dataset(id=dataset_id, name="", records=[])
+                    computation.write_result(
+                        model, selected_prompt, dummy_ds, dummy_rec, summary
                     )
-                computation.write_result(
-                    model, selected_prompt, scratch_dataset, new_record, summary
-                )
 
                 return summary
 
@@ -114,11 +127,17 @@ with col1:
                 dataset = next(filter(lambda ds: ds.name == selected_dataset, datasets))
                 for record in dataset.records:
                     if record.type.lower() == "url":
-                        record_doc = Doc.from_url(url=record.input_data)
+                        record_doc = Doc.from_url(
+                            url=record.input_data,
+                        )
                     elif record.type.lower() == "txt_file":
-                        record_doc = Doc.from_txt_file(txt_file=record.input_data)
+                        record_doc = Doc.from_txt_file(
+                            txt_file=record.input_data,
+                        )
                     else:
-                        record_doc = Doc.from_string(text=record.input_data)
+                        record_doc = Doc.from_string(
+                            text=record.input_data,
+                        )
                     if not all_prompts:
                         selected_prompt = next(
                             filter(
@@ -127,23 +146,25 @@ with col1:
                                 prompts,
                             )
                         )
-                        summary = single_prompt_prediction(selected_prompt, record_doc)
+                        summary = single_prompt_prediction(
+                            selected_prompt,
+                            record_doc,
+                            record.id,
+                            dataset.id,
+                            False,
+                        )
                         write_summary(selected_prompt, "", summary)
                     else:
                         for selected_prompt in prompts:
                             summary = single_prompt_prediction(
-                                selected_prompt, record_doc
+                                selected_prompt,
+                                record_doc,
+                                record.id,
+                                dataset.id,
+                                False,
                             )
                             write_summary(selected_prompt, "", summary)
             elif input_doc.content.strip():
-                text = input_doc.content
-                if input_doc.filename:
-                    metadata = input_doc.filename
-                elif input_doc.url:
-                    metadata = input_doc.url
-                else:
-                    metadata = "raw_string"
-
                 if not all_prompts:
                     selected_prompt = next(
                         filter(
@@ -151,11 +172,11 @@ with col1:
                             prompts,
                         )
                     )
-                    summary = single_prompt_prediction(selected_prompt, text)
+                    summary = single_prompt_prediction(selected_prompt, input_doc)
                     write_summary(selected_prompt, "", summary)
                 else:
                     for selected_prompt in prompts:
-                        summary = single_prompt_prediction(selected_prompt, text)
+                        summary = single_prompt_prediction(selected_prompt, input_doc)
                         write_summary(selected_prompt, "", summary)
 
 with col2:
