@@ -61,7 +61,7 @@ elif input_method == "URL":
             input_doc = Doc.from_url(url)
             st.text_area(label="Fetched Text", value=input_doc.content)
         except Exception as e:
-            st.write("Error: Unable to fetch data from the URL")
+            st.write(f"Error: Unable to fetch data from the URL, {e}")
 elif input_method == "Text":
     input_text = st.text_area("Enter text")
     if input_text:
