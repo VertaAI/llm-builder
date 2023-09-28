@@ -31,7 +31,7 @@ class Doc:
             lines = [line.text for line in texts]
             content = " ".join(lines)
 
-            print(content)
+            # print(content)
 
             return cls(content=content, url=url)
 
