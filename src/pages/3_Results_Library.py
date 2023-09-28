@@ -115,6 +115,7 @@ def create_eval(
         email=os.environ["VERTA_EMAIL"],
         dev_key=os.environ["VERTA_DEV_KEY"],
     )
+    client._conn._set_default_workspace("Default")
 
     eval_rm = client.get_or_create_registered_model(name=evaluation_project, labels=['__VERTA_EVALUATION'])
     eval_rmv = None
