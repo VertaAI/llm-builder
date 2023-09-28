@@ -83,13 +83,22 @@ with col1:
                 )
             )
 
-            def single_prompt_prediction(selected_prompt, text):
-                summary = model.predict(selected_prompt, text)
+            def single_prompt_prediction(selected_prompt, doc: Doc):
+                summary = model.predict(selected_prompt, doc.content)
                 st.subheader("Generated Summary")
                 st.write(summary)
                 # result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
                 #             "Output": [summary]}
-                new_record = scratch_dataset.add_record(str(text))
+                if doc.url.strip():
+                    new_record = scratch_dataset.add_record(str(doc.url), type="url")
+                elif doc.filename.strip():
+                    new_record = scratch_dataset.add_record(
+                        str(doc.filename), type="file"
+                    )
+                else:
+                    new_record = scratch_dataset.add_record(
+                        str(doc.content), type="text"
+                    )
                 computation.write_result(
                     model, selected_prompt, scratch_dataset, new_record, summary
                 )
@@ -97,6 +106,12 @@ with col1:
             if input_method == "Dataset":
                 dataset = next(filter(lambda ds: ds.name == selected_dataset, datasets))
                 for record in dataset.records:
+                    if record.type.lower() == "url":
+                        record_doc = Doc.from_url(url=record.input_data)
+                    elif record.type.lower() == "txt_file":
+                        record_doc = Doc.from_txt_file(txt_file=record.input_data)
+                    else:
+                        record_doc = Doc.from_string(text=record.input_data)
                     if not all_prompts:
                         selected_prompt = next(
                             filter(
@@ -105,10 +120,10 @@ with col1:
                                 prompts,
                             )
                         )
-                        single_prompt_prediction(selected_prompt, record.input_data)
+                        single_prompt_prediction(selected_prompt, record_doc)
                     else:
                         for selected_prompt in prompts:
-                            single_prompt_prediction(selected_prompt, record.input_data)
+                            single_prompt_prediction(selected_prompt, record)
             elif input_doc.content.strip():
                 text = input_doc.content
                 if input_doc.filename:
@@ -172,7 +187,11 @@ with col2:
         with st.form("save_prompt", clear_on_submit=True):
             if st.session_state.pop("new_prompt_name" + _FORM_VALIDATION_KEY, None):
                 st.error("Prompt name cannot be empty")
-            new_prompt_name = st.text_input('Create new prompt', key='new_prompt_name', placeholder='Enter new prompt name')
+            new_prompt_name = st.text_input(
+                "Create new prompt",
+                key="new_prompt_name",
+                placeholder="Enter new prompt name",
+            )
             save_button = st.form_submit_button("Save")
 
             if save_button:
@@ -188,7 +207,9 @@ with col2:
                     st.experimental_rerun()
                 else:
                     if len(new_prompt_name) == 0:
-                        st.session_state["new_prompt_name" + _FORM_VALIDATION_KEY] = True
+                        st.session_state[
+                            "new_prompt_name" + _FORM_VALIDATION_KEY
+                        ] = True
                     if len(prompt_content) == 0:
                         st.session_state["prompt_content" + _FORM_VALIDATION_KEY] = True
                     st.experimental_rerun()
