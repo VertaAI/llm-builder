@@ -7,6 +7,7 @@ from typing import Union
 import os
 import io
 from bs4.element import Comment
+import urllib
 
 
 @dataclass
@@ -20,15 +21,24 @@ class Doc:
         # Validate URL
         validation = validators.url(url)
         if validation:
-            # Make get request
-            r = requests.get(url)
+            # Parse wikipedia links
+            if url.lower().find("wikipedia") != -1:
+                r = urllib.request.urlopen(url).read()
 
-            # Parsing the HTML
-            soup = BeautifulSoup(r.content, "html.parser")
+                # Parsing the HTML
+                soup = BeautifulSoup(r, "lxml")
 
-            s = soup.find("div")
-            texts = s.findAll("p", text=True, class_="")
-            lines = [line.text for line in texts]
+                texts = soup.findAll("p")
+
+            else:
+                r = requests.get(url)
+                # Parsing the HTML
+                soup = BeautifulSoup(r.content, "html.parser")
+
+                s = soup.find("div")
+                texts = s.findAll("p", text=True, class_="")
+
+            lines = [line.text.strip() for line in texts]
             content = " ".join(lines)
 
             # print(content)
