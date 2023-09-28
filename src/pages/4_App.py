@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 from streamlit.errors import StreamlitAPIException
 from ai import summarize, refine_task_message_prompt
-from table import load_data, load_config
+from table import load_data, load_config, load_datasets
 from ai import Doc
 
 try:
@@ -38,7 +38,7 @@ st.title("Document Summarization Bot")
 
 logs = open("logs.json", "a")
 
-input_method = st.selectbox("Select input method", ("File", "URL", "Text"))
+input_method = st.selectbox("Select input method", ("File", "URL", "Text", "Dataset"))
 
 if input_method == "File":
     # Upload a file
@@ -66,47 +66,47 @@ elif input_method == "Text":
     input_text = st.text_area("Enter text")
     if input_text:
         input_doc = Doc.from_string(input_text)
-
-
+elif input_method == "Dataset":
+    datasets = load_datasets()
+    selected_dataset = st.selectbox("Select a dataset", [dataset.name for dataset in datasets])
 prompt_name = config["prompt"]
 
 # "Summarize" button
-if st.button("Summarize") and input_doc.content.strip():
-    text = input_doc.content
-    if input_doc.filename:
-        metadata = input_doc.filename
-    elif input_doc.url:
-        metadata = input_doc.url
+if st.button("Summarize"):
+    if input_method == "Dataset":
+        dataset = next(filter(lambda ds: ds.name == selected_dataset, datasets))
+        selected_prompt = next(filter(lambda x: x.name == prompt_name, prompts))
+        for record in dataset.records:
+            summary = summarize(record.input_data, prompt=selected_prompt.prompt)
+            result = {
+                "Id": ["abc"],
+                "Input": [record.input_data],
+                "Prompt": [selected_prompt.prompt],
+                "Output": [summary],
+            }
+            update_table(result)
+    elif input_doc.content.strip():
+        text = input_doc.content
+        if input_doc.filename:
+            metadata = input_doc.filename
+        elif input_doc.url:
+            metadata = input_doc.url
+        else:
+            metadata = "raw_string"
+        # call AI model
+        selected_prompt = next(filter(lambda x: x.name == prompt_name, prompts))
+        summary = summarize(text, prompt=selected_prompt.prompt)
+
+        st.write(f"Summary:\n {summary}")
+        result = {
+            "Id": ["abc"],
+            "Input": [metadata],
+            "Prompt": [selected_prompt.prompt],
+            "Output": [summary],
+        }
+        update_table(result)
     else:
-        metadata = "raw_string"
-    # call AI model
-    selected_prompt = next(filter(lambda x: x.name == prompt_name, prompts))
-    summary = summarize(text, prompt=selected_prompt.prompt)
-
-    st.write(f"Summary:\n {summary}")
-    result = {
-        "Id": ["abc"],
-        "Input": [metadata],
-        "Prompt": [selected_prompt.prompt],
-        "Output": [summary],
-    }
-    update_table(result)
-    logs.write(json.dumps(result) + "\n")
-else:
-    st.warning("Please provide an input first.")
-
-# feedback = st.text_input("Provide feedback on the prompt")
-
-# if st.button("Auto Refine Prompt"):
-#     # make call
-#     current_prompt = next(filter(lambda x: x['name'] == prompt_name, prompts))["task_message"]
-#     recommendation = refine_task_message_prompt(current_prompt, feedback)
-#     st.write("Recommendation:")
-#     st.write(recommendation)
-#     pass
-
-# if st.button("Add to prompt library"):
-#     pass
+        st.warning("Please provide an input.")
 
 st.write("Experimentation Trace")
 st.table(st.session_state["df"])

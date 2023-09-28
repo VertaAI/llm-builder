@@ -11,6 +11,7 @@ from dataset.base import Dataset, Record
 import computation
 import table
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder
+from ai import Doc
 
 st.set_page_config(page_title='LLM Builder', layout="wide")
             
@@ -41,37 +42,69 @@ st.session_state["prompt_options"] = [prompt.get_name() for prompt in st.session
 col1, col2 = st.columns([2, 2])
 with col1:
   st.subheader("Document Summarization Bot")
-  with st.form("bot", clear_on_submit=False):
-    # Upload a file
-    uploaded_file = st.file_uploader("Upload a file (.txt)", type=["txt"])
+  with st.container():
+    input_method = st.selectbox("Select input method", ("File", "URL", "Text", "Dataset"))
+    if input_method == "File":
+        # Upload a file
+        uploaded_file = st.file_uploader("Upload a file (.txt)", type=["txt"])
+        if uploaded_file is not None:
+            input_doc = Doc.from_bytes(uploaded_file)
+            st.text_area(label="Fetched Text", value=input_doc.content)
+    elif input_method == "URL":
+        url = st.text_input("Enter URL")
+        if url:
+            try:
+                input_doc = Doc.from_url(url)
+                st.text_area(label="Fetched Text", value=input_doc.content)
+            except Exception as e:
+                st.write(f"Error: Unable to fetch data from the URL, {e}")
+    elif input_method == "Text":
+        input_text = st.text_area("Enter text")
+        if input_text:
+            input_doc = Doc.from_string(input_text)
+    elif input_method == "Dataset":
+        datasets = table.load_datasets()
+        selected_dataset = st.selectbox("Select a dataset", [dataset.name for dataset in datasets])
 
     all_prompts = st.checkbox("Run all prompts")
 
     # "Summarize" button
-    if st.form_submit_button("Summarize"):
-      if uploaded_file is not None:
-        # Read text from the uploaded .txt file
-        text = uploaded_file.read()
-        model = next(filter(lambda x: x.get_name() == st.session_state["model_selection"], models))
+    if st.button("Summarize"):
+      model = next(filter(lambda x: x.get_name() == st.session_state["model_selection"], models))
 
-        # call AI model
-        if not all_prompts:
-          selected_prompt = next(filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
+      def single_prompt_prediction(selected_prompt, text):
           summary = model.predict(selected_prompt, text)
-          result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
-                      "Output": [summary]}
+          # result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
+          #             "Output": [summary]}
           new_record = scratch_dataset.add_record(str(text))
           computation.write_result(model, selected_prompt, scratch_dataset, new_record, summary)
+         
+      if input_method == "Dataset":
+        dataset = next(filter(lambda ds: ds.name == selected_dataset, datasets))
+        for record in dataset.records:
+          if not all_prompts:
+            selected_prompt = next(filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
+            single_prompt_prediction(selected_prompt, record.input_data)
+          else:
+            for selected_prompt in prompts[:3]:
+              single_prompt_prediction(selected_prompt, record.input_data)
+      elif input_doc.content.strip():
+        text = input_doc.content
+        if input_doc.filename:
+            metadata = input_doc.filename
+        elif input_doc.url:
+            metadata = input_doc.url
+        else:
+            metadata = "raw_string"
+        
+        if not all_prompts:
+          selected_prompt = next(filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
+          single_prompt_prediction(selected_prompt, text)
         else:
           for selected_prompt in prompts[:3]:
-            summary = model.predict(selected_prompt, text)
-            # st.write(f"Summary:\n {summary}")
-            result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
-                        "Output": [summary]}
-            new_record = scratch_dataset.add_record(str(text))
-            computation.write_result(model, selected_prompt, scratch_dataset, new_record, summary)
-      else:
-          st.warning("Please upload a file first.")
+            single_prompt_prediction(selected_prompt, text)
+    else:
+        st.warning("Please provide an input.")
 
 with col2:
   st.subheader('Configuration')
