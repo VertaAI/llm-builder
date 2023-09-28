@@ -20,7 +20,8 @@ models = LLM_Builder.load_models()
 col1, col2, col3 = st.columns([1,5,2])
 
 with col3:
-    analyze_button = st.button("Analyze with Verta")
+    # analyze_button = st.button("Analyze with Verta")
+    pass
 with col1:
     st.subheader('Results')
 
@@ -147,7 +148,7 @@ def create_eval(
     return eval_rmv
 
 
-if analyze_button:
+if st.button("Analyze with Verta"):
     toexport = df
     if selection.shape[0] > 0:
         toexport = selection
@@ -159,8 +160,20 @@ if analyze_button:
         rmvs = []
         sample_url = None
         for group in toexport.groupby(by=["model", "prompt", "dataset"]):
-            eval_name = "eval--" + "-".join(list(group[0]))
+            full_promt = next(
+                filter(lambda x: str(x.id) == str(group[0][1]), prompts))
+            prompt_content = full_promt.prompt
+
+            full_dataset = next(
+                filter(lambda x: str(x.id) == str(group[0][2]), datasets))
+            
+            eval_id_human_readable = "-".join([
+                group[0][0], 
+                "_".join(full_promt.name.split()), 
+                "_".join(full_dataset.name.split())])
+            eval_name = "eval--" + eval_id_human_readable
             eval_df = group[1]
+            eval_df = eval_df.drop(["model", "prompt", "dataset"], axis=1)
             if not os.path.exists("evaluations"):
                 os.makedirs("evaluations")
 
@@ -168,13 +181,12 @@ if analyze_button:
             eval_df.to_csv(open(filename, "w"), index=False)
             rmv = create_eval(
                 eval_name,  # rmv name
-                "Doc-Summarization",  # string; // registeredModelId
+                "Doc-Summarization",  # string
                 filename,  # filename
-                description="Evaluation for " + "-".join(list(group[0])),  # string;
-                labels=["too short", "too long", "hallucination"],
-                # potential labels; -- NOTE: we need to allow label changes
+                description="Evaluation for " + eval_id_human_readable,  # string;
+                labels=["too short", "too long", "hallucination"], # potential labels;
                 model_id=group[0][0],  # string; EvaluationAttributeKey.CONFIGURATION
-                configuration=group[0][1]  # string; // EvaluationAttributeKey.MODEL_ID
+                configuration=prompt_content  # string; // EvaluationAttributeKey.MODEL_ID
             )
             rmvs.append(rmv.id)
             sample_url = rmv.url

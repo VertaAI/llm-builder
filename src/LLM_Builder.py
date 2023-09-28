@@ -95,7 +95,7 @@ with col1:
                             filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
                         single_prompt_prediction(selected_prompt, record.input_data)
                     else:
-                        for selected_prompt in prompts[:3]:
+                        for selected_prompt in prompts:
                             single_prompt_prediction(selected_prompt, record.input_data)
             elif input_doc.content.strip():
                 text = input_doc.content
@@ -110,7 +110,7 @@ with col1:
                     selected_prompt = next(filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
                     single_prompt_prediction(selected_prompt, text)
                 else:
-                    for selected_prompt in prompts[:3]:
+                    for selected_prompt in prompts:
                         single_prompt_prediction(selected_prompt, text)
         else:
             st.warning("Please provide an input.")
@@ -173,7 +173,7 @@ with col2:
         feedback = st.text_input("Provide feedback on the prompt")
         if st.button("Auto Refine Prompt"):
             # make call
-            recommendation = refine_task_message_prompt(prompt_content, feedback)
+            recommendation = refine_task_message_prompt(prompt_content, feedback).strip()
             st.write(recommendation)
             if "auto_refine_rec" not in st.session_state:
                 st.session_state["auto_refine_rec"] = recommendation
