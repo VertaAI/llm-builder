@@ -113,7 +113,7 @@ def create_eval(
 ):
     # connect to Verta
     client = Client(
-        host="dev.verta.ai",
+        host=os.environ.get("VERTA_HOST", 'app.verta.ai'),
         email=os.environ["VERTA_EMAIL"],
         dev_key=os.environ["VERTA_DEV_KEY"],
     )
