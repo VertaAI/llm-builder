@@ -6,6 +6,7 @@ import validators
 from typing import Union
 import os
 import io
+from bs4.element import Comment
 
 
 @dataclass
@@ -25,10 +26,12 @@ class Doc:
             # Parsing the HTML
             soup = BeautifulSoup(r.content, "html.parser")
 
-            s = soup.find("div", class_="body-wrapper")
-            lines = s.find_all("p", class_="")
-            lines = [line.text for line in lines]
+            s = soup.find("div")
+            texts = s.findAll("p", text=True, class_="")
+            lines = [line.text for line in texts]
             content = " ".join(lines)
+
+            print(content)
 
             return cls(content=content, url=url)
 
