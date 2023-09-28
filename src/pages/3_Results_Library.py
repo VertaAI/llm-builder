@@ -16,7 +16,12 @@ except StreamlitAPIException:
 
 models = LLM_Builder.load_models()
 
-st.subheader('Results')
+col1, col2, col3 = st.columns([1,5,2])
+
+with col3:
+    analyze_button = st.button("Analyze with Verta")
+with col1:
+    st.subheader('Results')
 
 (datasets, prompts) = table.load_data()
 # with st.spinner("Please wait..."):
@@ -25,6 +30,7 @@ st.subheader('Results')
 # df = table.create_table(datasets, models, prompts, cached=True)
 # df = table.create_empty_table()
 
+
 df = table.read_results()
 
 gb = GridOptionsBuilder.from_dataframe(df)
@@ -32,21 +38,21 @@ gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wra
 gb.configure_column("record id", hide=True)
 gb.configure_selection(selection_mode="multiple", use_checkbox=True)
 
-library_grid = AgGrid(df, height=200, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
+library_grid = AgGrid(df, height=1000, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
                       gridOptions=gb.build(), key='grid')
 
 selected_rows = library_grid["selected_rows"]
 selection = pd.DataFrame(selected_rows)
-# # TODO: this isn't working as expected. The column is not being dropped.
-# if '_selectedRowNodeInfo' in selection.columns:
-#     selection.drop(labels='_selectedRowNodeInfo', axis=1)
-# st.write("Selected rows:")
-# st.data_editor(
-#     selection,
-#     hide_index=True,
-#     disabled=df.columns,
-#     width=10000,
-# )
+# TODO: this isn't working as expected. The column is not being dropped.
+if '_selectedRowNodeInfo' in selection.columns:
+    selection.drop(labels='_selectedRowNodeInfo', axis=1)
+st.write("Selected rows:")
+st.data_editor(
+    selection,
+    hide_index=True,
+    disabled=df.columns,
+    width=10000,
+)
 
 
 # @st.cache_data
@@ -162,7 +168,7 @@ def create_eval(
     return eval_rmv
 
 
-if st.button("Analyze with Verta"):
+if analyze_button:
     toexport = df
     if selection.shape[0] > 0:
         toexport = selection

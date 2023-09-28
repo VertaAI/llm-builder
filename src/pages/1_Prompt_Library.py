@@ -29,7 +29,7 @@ prompt_grid = AgGrid(
     prompt_frame,
     data_return_mode=DataReturnMode.AS_INPUT,
     update_mode=GridUpdateMode.SELECTION_CHANGED,
-    columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
+    columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
     gridOptions=gb.build(), height=500)
 
 selected = prompt_grid["selected_rows"]
