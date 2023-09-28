@@ -18,6 +18,8 @@ def load_datasets():
     # Loop over all the files in the dataset folder
     if os.path.exists("../data/datasets"):
         for filename in os.listdir("../data/datasets"):
+            if os.path.isdir("../data/datasets/{}".format(filename)):
+                continue
             # Open the file
             with open("../data/datasets/{}".format(filename), "r") as f:
                 # Load the dataset from the file
@@ -34,6 +36,8 @@ def load_data():
     # Loop over all the files in the dataset folder
     if os.path.exists("../data/datasets"):
         for filename in os.listdir("../data/datasets"):
+            if os.path.isdir("../data/datasets/{}".format(filename)):
+                continue
             # Open the file
             with open("../data/datasets/{}".format(filename), "r") as f:
                 # Load the dataset from the file

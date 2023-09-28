@@ -2,5 +2,5 @@
     "id": 2,
     "name": "three",
     "description": "",
-    "prompt": "You are an expert at summarizing documents. You are to follow the instructions given below:\n\n1. Keep the summary under 300 words.\n2. Explain it briefly and keep it easy to understand.\n3. Keep it to the point and do not add any information which cannot be inferred from the information provided.\n\nRead through the document and figure out the domain of the context. Assume you are an expert in the domain and provide a brief summary for the context given below.\n\nDocument: "
+    "prompt": "Read the movie plot carefully and create a concise summary of the main story line. Your summary should not exceed 100 words. Make the summary fun to read with interesting twists and a funny intro."
 }

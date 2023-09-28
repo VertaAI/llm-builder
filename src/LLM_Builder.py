@@ -75,7 +75,6 @@ with col1:
             selected_dataset = st.selectbox(
                 "Select a dataset", [dataset.name for dataset in datasets]
             )
-
         all_prompts = st.checkbox("Run all prompts")
 
         # "Summarize" button
@@ -133,8 +132,6 @@ with col1:
                 else:
                     for selected_prompt in prompts:
                         single_prompt_prediction(selected_prompt, text)
-        else:
-            st.warning("Please provide an input.")
 
 with col2:
     st.subheader("Configuration")

@@ -1,5 +1,27 @@
 {
     "id": 0,
-    "name": "Scratch Dataset",
-    "records": []
+    "name": "Sample Dataset",
+    "records": [
+        {
+            "id": 0,
+            "input_data": "https://www.verta.ai/blog/5-lessons-from-building-a-genai-product-for-model-documentation",
+            "ground_truth": "",
+            "type": "text",
+            "metadata": "{}"
+        },
+        {
+            "id": 1,
+            "input_data": "https://www.verta.ai/blog/documentation-horror-stories-0823",
+            "ground_truth": "",
+            "type": "text",
+            "metadata": "{}"
+        },
+        {
+            "id": 2,
+            "input_data": "https://www.verta.ai/blog/everyone-hates-model-documentation",
+            "ground_truth": "",
+            "type": "text",
+            "metadata": "{}"
+        }
+    ]
 }
