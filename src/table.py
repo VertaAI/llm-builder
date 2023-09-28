@@ -9,6 +9,21 @@ import pandas as pd
 def load_config():
     return json.load(open("../data/app_config.json"))
 
+def load_datasets():
+    # Load datasets from yaml files
+    datasets = []
+    # Loop over all the files in the dataset folder
+    if os.path.exists("../data/datasets"):
+        for filename in os.listdir("../data/datasets"):
+            # Open the file
+            with open("../data/datasets/{}".format(filename), "r") as f:
+                # Load the dataset from the file
+                dataset = json.load(f)
+                dataset = Dataset.from_dict(dataset)
+                # Add the dataset to the list of datasets
+                datasets.append(dataset)
+    return datasets
+
 def load_data():
     # Load datasets from yaml files
     datasets = []
@@ -42,12 +57,12 @@ def load_data():
 def create_table(datasets, models, prompts, cached=True):
     data = {
         'model': [],
-        'prompt content': [],
+        'prompt': [],
         'dataset': [],
-        'record id': [],
-        'record input': [],
-        'ground truth': [],
-        'prediction': [],
+        'id': [],
+        'input': [],
+        'groundtruth': [],
+        'output': [],
     }
 
     for dataset in datasets:
@@ -57,13 +72,78 @@ def create_table(datasets, models, prompts, cached=True):
             else:
                 prediction = model.predict(prompt, record.input_data)
             data['model'].append(model.get_name())
-            data['prompt content'].append(prompt.prompt)
+            data['prompt'].append(prompt.prompt)
             data['dataset'].append(dataset.name)
-            data['record id'].append(record.id)
-            data['record input'].append(record.input_data)
-            data['ground truth'].append(record.ground_truth)
-            data['prediction'].append(prediction)
+            data['id'].append(record.id)
+            data['input'].append(record.input_data)
+            data['groundtruth'].append(record.ground_truth)
+            data['output'].append(prediction)
 
     df = pd.DataFrame(data)
 
     return df
+
+def create_empty_table():
+    data = {
+        'model': ['davinci', 'davinci'],
+        'prompt content': ['lawyer', 'harrypotter'],
+        'dataset': ['sample1', 'sample2'],
+        'record id': ['1', '1'],
+        'input': ['gen ai genai', 'gen ai genai2'],
+        'groundtruth': ['', ''],
+        'output': ['genai', 'genai2'],
+
+    }
+
+    df = pd.DataFrame(data)
+
+    return df
+
+def read_results():
+
+    from pathlib import Path
+    path = str(Path(os.path.abspath(__file__)).parent.parent.as_posix()) + "/cache/"
+    import glob
+
+    data = {
+        'model': [],
+        'prompt': [],
+        'dataset': [],
+        'id': [],
+        'input': [],
+        'groundtruth': [],
+        'output': [],
+    }
+
+    # root_dir needs a trailing slash (i.e. /root/dir/)
+    for filename in glob.iglob(path + '*/*/*/*.txt', recursive=True):
+        model_snippet, prompt_snippet, dataset_snippet, record_snippet = filename.split(path)[1].split("/")
+        model_name = model_snippet.split("_")[1]
+        prompt_id = prompt_snippet.split("_")[1]
+        dataset_id = dataset_snippet.split("_")[1]
+        record_id = record_snippet.split(".txt")[0].split("_")[1]
+        prediction = ""
+        with open(filename, "r") as f:
+            prediction = f.read().strip()
+        
+        # read record
+        dataset = None
+        with open("../data/datasets/{}.json".format(dataset_id), "r") as f:
+            # Load the dataset from the file
+            dataset = json.load(f)
+            dataset = Dataset.from_dict(dataset)
+
+        record = next(filter(lambda rec: str(rec.id) == str(record_id), dataset.records))
+        
+        data['model'].append(model_name)
+        data['prompt'].append(prompt_id)
+        data['dataset'].append(dataset_id)
+        data['id'].append(record_id)
+        data['input'].append(record.input_data)
+        data['groundtruth'].append(record.ground_truth)
+        data['output'].append(prediction)
+
+    df = pd.DataFrame(data)
+
+    return df
+

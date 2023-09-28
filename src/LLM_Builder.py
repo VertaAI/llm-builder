@@ -9,6 +9,8 @@ import openai
 from prompts.base import Prompt
 from dataset.base import Dataset, Record
 import computation
+import table
+from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder
 
 st.set_page_config(page_title='LLM Builder', layout="wide")
             
@@ -43,20 +45,31 @@ with col1:
     # Upload a file
     uploaded_file = st.file_uploader("Upload a file (.txt)", type=["txt"])
 
+    all_prompts = st.checkbox("Run all prompts")
+
     # "Summarize" button
     if st.form_submit_button("Summarize"):
       if uploaded_file is not None:
         # Read text from the uploaded .txt file
         text = uploaded_file.read()
-        # call AI model
-        selected_prompt = next(filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
         model = next(filter(lambda x: x.get_name() == st.session_state["model_selection"], models))
-        summary = model.predict(selected_prompt, text)
-        st.write(f"Summary:\n {summary}")
-        result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
-                    "Output": [summary]}
-        new_record = scratch_dataset.add_record(str(text))
-        computation.write_result(model, selected_prompt, scratch_dataset, new_record, summary)
+
+        # call AI model
+        if not all_prompts:
+          selected_prompt = next(filter(lambda x: x.name == st.session_state["prompt_selection"], prompts))
+          summary = model.predict(selected_prompt, text)
+          result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
+                      "Output": [summary]}
+          new_record = scratch_dataset.add_record(str(text))
+          computation.write_result(model, selected_prompt, scratch_dataset, new_record, summary)
+        else:
+          for selected_prompt in prompts[:3]:
+            summary = model.predict(selected_prompt, text)
+            # st.write(f"Summary:\n {summary}")
+            result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
+                        "Output": [summary]}
+            new_record = scratch_dataset.add_record(str(text))
+            computation.write_result(model, selected_prompt, scratch_dataset, new_record, summary)
       else:
           st.warning("Please upload a file first.")
 
@@ -99,15 +112,17 @@ with col2:
     else:
         prompt_content = st.text_area('Prompt Text:', height=200, key='prompt_content')
 
-    save_button = st.button("Save prompt")
+    save_button = st.button("Save as new prompt")
     if save_button:
         if len(prompt_content) > 0:
-            if prompt:
-                prompt_id = prompt['id']
-            else:
-                prompt_id = len(prompts)
-            prompt = Prompt(prompt_id, prompt_name, prompt_description, prompt_content)
+            prompt_id = len(prompts)
+            prompt = Prompt(
+                prompt_id, 
+                prompt["name"] + "-edited", 
+                "Edited version of Prompt Id" + str(prompt["id"]),
+                prompt_content)
             prompt.save()
+            st.experimental_rerun()
         else:
             if len(prompt_content) == 0:
                 st.session_state['prompt_content'+_FORM_VALIDATION_KEY] = True
@@ -125,10 +140,24 @@ with col2:
         prompt_id = len(prompts)
         prompt = Prompt(
           prompt_id, 
-          prompt_name + '-refined-' + "-".join(feedback.split(" ")), 
-          prompt_description, 
+          prompt['name'] + '-refined-' + "-".join(feedback.split(" ")), 
+          "Refined prompt using feedback: " + feedback,
           st.session_state["auto_refine_rec"])
         prompt.save()
         st.session_state["prompts"].append(prompt)
         st.session_state["prompt_options"].append(prompt.get_name())
+        st.experimental_rerun()
         print("hurray")
+
+# results area
+st.subheader("Recent Results")
+df = table.read_results()[:5]
+
+gb = GridOptionsBuilder.from_dataframe(df)
+gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=True)
+gb.configure_column("record id", hide=True)
+gb.configure_selection(selection_mode="multiple", use_checkbox=True)
+
+library_grid = AgGrid(df, height=200, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
+                      gridOptions=gb.build(), key='grid')
+st.write("[See all results](/Results_Library)")

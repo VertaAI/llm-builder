@@ -38,7 +38,7 @@ class Dataset:
     def save(self):
         directory = "../data/datasets"
         os.makedirs(directory, exist_ok=True)
-        with open(os.path.join(directory, "{}.json".format(self.name)), "w") as f:
+        with open(os.path.join(directory, "{}.json".format(self.id)), "w") as f:
             json.dump(dataclasses.asdict(self), f, indent=4)
 
     def update_record(self, record):
