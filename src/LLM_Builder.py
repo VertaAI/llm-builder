@@ -79,6 +79,8 @@ with col1:
 
             def single_prompt_prediction(selected_prompt, text):
                 summary = model.predict(selected_prompt, text)
+                st.subheader("Generated Summary")
+                st.write(summary)
                 # result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
                 #             "Output": [summary]}
                 new_record = scratch_dataset.add_record(str(text))
@@ -194,7 +196,7 @@ st.subheader("Recent Results")
 df = table.read_results()[:5]
 
 gb = GridOptionsBuilder.from_dataframe(df)
-gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=True)
+gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=False)
 gb.configure_column("record id", hide=True)
 gb.configure_selection(selection_mode="multiple", use_checkbox=True)
 

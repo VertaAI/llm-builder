@@ -161,6 +161,9 @@ if analyze_button:
         for group in toexport.groupby(by=["model", "prompt", "dataset"]):
             eval_name = "eval--" + "-".join(list(group[0]))
             eval_df = group[1]
+            if not os.path.exists("evaluations"):
+                os.makedirs("evaluations")
+
             filename = "evaluations/" + eval_name + "--" + time_str + ".csv"
             eval_df.to_csv(open(filename, "w"), index=False)
             rmv = create_eval(
