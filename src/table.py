@@ -139,15 +139,16 @@ def read_results():
             dataset = json.load(f)
             dataset = Dataset.from_dict(dataset)
 
-        record = next(filter(lambda rec: str(rec.id) == str(record_id), dataset.records))
-
-        data['model'].append(model_name)
-        data['prompt'].append(prompt_id)
-        data['dataset'].append(dataset_id)
-        data['id'].append(record_id)
-        data['input'].append(record.input_data)
-        data['groundtruth'].append(record.ground_truth)
-        data['output'].append(prediction)
+        filtered_records = filter(lambda rec: str(rec.id) == str(record_id), dataset.records)
+        record = next(filtered_records, None)
+        if record is not None:
+            data['model'].append(model_name)
+            data['prompt'].append(prompt_id)
+            data['dataset'].append(dataset_id)
+            data['id'].append(record_id)
+            data['input'].append(record.input_data)
+            data['groundtruth'].append(record.ground_truth)
+            data['output'].append(prediction)
 
     df = pd.DataFrame(data)
 
