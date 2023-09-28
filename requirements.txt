@@ -5,3 +5,4 @@ dataclasses-json
 
 openai~=0.28.0
 beautifulsoup4
+lxml
