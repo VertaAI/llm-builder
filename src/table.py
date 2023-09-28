@@ -4,7 +4,6 @@ import os
 
 import pandas as pd
 
-from computation import load
 from dataset.base import Dataset
 from prompts.base import Prompt
 
@@ -72,10 +71,7 @@ def create_table(datasets, models, prompts, cached=True):
 
     for dataset in datasets:
         for (model, prompt, record) in itertools.product(models, prompts, dataset.records):
-            if cached:
-                prediction = load(model, prompt, dataset, record)
-            else:
-                prediction = model.predict(prompt, record.input_data)
+            prediction = model.predict(prompt, record.input_data)
             data['model'].append(model.get_name())
             data['prompt'].append(prompt.prompt)
             data['dataset'].append(dataset.name)
@@ -98,7 +94,7 @@ def create_empty_table():
         'input': ['gen ai genai', 'gen ai genai2'],
         'groundtruth': ['', ''],
         'output': ['genai', 'genai2'],
-
+        'timestamp': ['000', '001']
     }
 
     df = pd.DataFrame(data)
@@ -112,13 +108,14 @@ def read_results():
     import glob
 
     data = {
+        'timestamp': [],
+        'input': [],
+        'output': [],
         'model': [],
         'prompt': [],
         'dataset': [],
         'id': [],
-        'input': [],
         'groundtruth': [],
-        'output': [],
     }
 
     # root_dir needs a trailing slash (i.e. /root/dir/)
@@ -128,6 +125,8 @@ def read_results():
         prompt_id = prompt_snippet.split("_")[1]
         dataset_id = dataset_snippet.split("_")[1]
         record_id = record_snippet.split(".txt")[0].split("_")[1]
+        timestamp = record_snippet.split(".txt")[0].split("_")[2]
+
         prediction = ""
         with open(filename, "r") as f:
             prediction = f.read().strip()
@@ -149,7 +148,9 @@ def read_results():
             data['input'].append(record.input_data)
             data['groundtruth'].append(record.ground_truth)
             data['output'].append(prediction)
+            data['timestamp'].append(timestamp)
 
     df = pd.DataFrame(data)
+    df.sort_values(by='timestamp', ascending=False, inplace=True)
 
     return df

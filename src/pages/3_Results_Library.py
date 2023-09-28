@@ -35,14 +35,12 @@ gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, wra
 gb.configure_column("record id", hide=True)
 gb.configure_selection(selection_mode="multiple", use_checkbox=True)
 
-library_grid = AgGrid(df, height=1000, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
+library_grid = AgGrid(df, height=500, columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
                       gridOptions=gb.build(), key='grid')
 
 selected_rows = library_grid["selected_rows"]
 selection = pd.DataFrame(selected_rows)
-# TODO: this isn't working as expected. The column is not being dropped.
-if '_selectedRowNodeInfo' in selection.columns:
-    selection.drop(labels='_selectedRowNodeInfo', axis=1)
+
 st.write("Selected rows:")
 st.data_editor(
     selection,
