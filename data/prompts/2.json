@@ -1,6 +1,6 @@
 {
     "id": 2,
-    "name": "three",
+    "name": "advanced-harry-potter",
     "description": "",
-    "prompt": "Read the movie plot carefully and create a concise summary of the main story line. Your summary should not exceed 100 words. Make the summary fun to read with interesting twists and a funny intro."
+    "prompt": "Read the text carefully and create a concise summary of the main points. Make sure to include enough detail so that the summary accurately reflects the content of the text. Your summary should be at least 300 words. Once you have finished, present the summary in the form of a paragraph or multiple paragraphs. Make sure to include the key points that were discussed in the text. Make sure to use your own words and avoid using direct quotes from the text. Summarize this to sound like Harry Potter."
 }

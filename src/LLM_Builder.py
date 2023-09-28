@@ -1,5 +1,4 @@
 import os
-
 import openai
 import streamlit as st
 from st_aggrid import AgGrid, ColumnsAutoSizeMode, GridOptionsBuilder
@@ -22,7 +21,6 @@ _FORM_VALIDATION_KEY = "dc_form_validation"
 
 def load_models():
     return [DaVinci(1), ChatGPT(2), ChatGPT16k(3)]
-
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
@@ -85,14 +83,16 @@ with col1:
 
             def single_prompt_prediction(selected_prompt, text):
                 summary = model.predict(selected_prompt, text)
-                st.subheader("Generated Summary")
-                st.write(summary)
-                # result = {"Id": ["abc"], "Input": [uploaded_file.name], "Prompt": [selected_prompt.prompt],
-                #             "Output": [summary]}
                 new_record = scratch_dataset.add_record(str(text))
                 computation.write_result(
                     model, selected_prompt, scratch_dataset, new_record, summary
                 )
+                return summary
+
+            def write_summary(selected_prompt, input, summary):
+                st.subheader("Generated Summary")
+                st.write("Prompt: {}".format(selected_prompt.prompt))
+                st.write("Summary: {}".format(summary))
 
             if input_method == "Dataset":
                 dataset = next(filter(lambda ds: ds.name == selected_dataset, datasets))
@@ -105,10 +105,12 @@ with col1:
                                 prompts,
                             )
                         )
-                        single_prompt_prediction(selected_prompt, record.input_data)
+                        summary = single_prompt_prediction(selected_prompt, record.input_data)
+                        write_summary(selected_prompt, "", summary)
                     else:
                         for selected_prompt in prompts:
-                            single_prompt_prediction(selected_prompt, record.input_data)
+                            summary = single_prompt_prediction(selected_prompt, record.input_data)
+                            write_summary(selected_prompt, "", summary)
             elif input_doc.content.strip():
                 text = input_doc.content
                 if input_doc.filename:
@@ -125,10 +127,12 @@ with col1:
                             prompts,
                         )
                     )
-                    single_prompt_prediction(selected_prompt, text)
+                    summary = single_prompt_prediction(selected_prompt, text)
+                    write_summary(selected_prompt, "", summary)
                 else:
                     for selected_prompt in prompts:
-                        single_prompt_prediction(selected_prompt, text)
+                        summary = single_prompt_prediction(selected_prompt, text)
+                        write_summary(selected_prompt, "", summary)
 
 with col2:
     st.subheader("Configuration")
@@ -217,24 +221,5 @@ with col2:
             st.session_state["prompts"].append(prompt)
             st.session_state["prompt_options"].append(prompt.get_name())
             st.experimental_rerun()
-            print("hurray")
 
-# results area
-st.subheader("Recent Results")
-df = table.read_results()[:5]
-
-gb = GridOptionsBuilder.from_dataframe(df)
-gb.configure_default_column(
-    groupable=True, value=True, enableRowGroup=True, wrapText=True, autoHeight=False
-)
-gb.configure_column("record id", hide=True)
-gb.configure_selection(selection_mode="multiple", use_checkbox=True)
-
-library_grid = AgGrid(
-    df,
-    height=200,
-    columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS,
-    gridOptions=gb.build(),
-    key="grid",
-)
 st.write("[See all results](/Results_Library)")
