@@ -1,5 +1,5 @@
 # Document Summarization Bot
-The quickstart example is a document summarization bot that can take a file, URL or text as input and summarize the content. It uses Open AI APIs. It also includes a LLM builder tool to help youu manage and iterate on prompts and input datasets. A set of sample prompts and datasets are already available and you can bring your own data and refine on prompts.
+The quickstart example is a document summarization bot that can take a file, URL or text as input and summarize the content. It uses Open AI APIs. It also includes a LLM builder tool to help you manage and iterate on prompts and input datasets. A set of sample prompts and datasets are already available and you can bring your own data and refine on prompts.
 
 ## Setup steps
 * Python 3 in your machine
