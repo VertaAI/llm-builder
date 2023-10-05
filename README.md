@@ -4,7 +4,6 @@ The quickstart example is a document summarization bot that can take a file, URL
 ## Setup steps
 * Python 3 in your machine
 * Setup and activate python virtual environment
-   - `brew install pyenv-virtualenv`
    - `python3 -m venv yourownenv`
    - `source yourownenv/bin/activate`
 * Download or git-clone the quickstart project
